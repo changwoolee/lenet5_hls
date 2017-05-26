@@ -1,4 +1,4 @@
-LeNet-5[^1] in HLS
+LeNet-5 in HLS
 ===========
 This repository is about my graduate report, implementing LeNet-5 in High Level Synthesis
 
@@ -6,8 +6,6 @@ This repository is about my graduate report, implementing LeNet-5 in High Level 
 ![lenet5](https://world4jason.gitbooks.io/research-log/content/deepLearning/CNN/img/lenet.png "LeNet-5")
 
 
-
-[^1]: Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner. Gradient based learning applied to document recognition. Proceedings of the IEEE, 86(11):2278–2324, November 1998
 
 _TO-DO_
 -----

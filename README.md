@@ -10,9 +10,7 @@ TO-DO
 
 #CONVOLUTION_LAYER_1
 
-HW cycle : 311203
-SW cycle : 1511349
-Speed up : x4.86
+LUT usage : 67% -> 28%
 
 #CONVOLUTION_LAYER_2
-This works with no error but shoud be optimized
+

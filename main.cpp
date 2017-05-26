@@ -159,7 +159,7 @@ int main(void){
 
 		//C2 start
 		hw_ctr_conv2.start();
-		CONVOLUTION_LAYER_2_SW(pool1,Wconv2,bconv2,hconv2);
+		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2);
 		hw_ctr_conv2.stop();
 //		cout<<".";
 		hw_ctr_pool2.start();

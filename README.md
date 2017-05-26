@@ -1,9 +1,9 @@
-LeNet-5 in HLS
+LeNet-5[^1] in HLS
 ===========
 This repository is about my graduate report, implementing LeNet-5 in High Level Synthesis
 
 
-![lenet5](https://world4jason.gitbooks.io/research-log/content/deepLearning/CNN/img/lenet.png "LeNet-5[^1]")
+![lenet5](https://world4jason.gitbooks.io/research-log/content/deepLearning/CNN/img/lenet.png "LeNet-5")
 
 
 

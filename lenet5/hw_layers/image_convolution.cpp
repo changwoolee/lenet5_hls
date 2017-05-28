@@ -272,6 +272,8 @@ void CONVOLUTION_LAYER_3(float input_feature[CONV_2_TYPE*image_Batch*CONV_3_INPU
 
 	float bias[CONV_1_TYPE];
 	#pragma HLS array_partition variable=bias complete dim=0 // 될 진 모르겠음 일단 해본다
+	
+	float output[image_Batch*CONV_3_TYPE];
 
 	int col, row, col_f, row_f;
 	int depth_in, batch_cnt, depth_out;

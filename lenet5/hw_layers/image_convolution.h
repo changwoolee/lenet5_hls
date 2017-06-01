@@ -1,6 +1,5 @@
 #include "../common.h"
 
-
 #define CONV_2_SIZE 25
 
 /*

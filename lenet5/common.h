@@ -20,7 +20,10 @@
 #define MNIST_LABEL_SIZE 10
 #define INPUT_SIZE 1024
 #define INPUT_WH 32
+#define INPUT_DEPTH 1
 
+#define CONV_1_INPUT_SIZE 1024
+#define CONV_1_INPUT_WH 32
 #define CONV_1_OUTPUT_SIZE 784
 #define CONV_1_OUTPUT_WH 28
 #define CONV_1_TYPE 6

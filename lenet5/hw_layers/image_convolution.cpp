@@ -31,13 +31,6 @@ void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 		for(int j=0;j<CONV_1_SIZE;j++){
 #pragma HLS unroll factor=5
 			kernel[i][j] = conv_kernel[i*CONV_1_SIZE+j];
-			/*
-			copy_kernel_3:
-			for(int k=0;k<CONV_1_WH;k++){
-#pragma HLS unroll
-#pragma pipeline II=1
-				kernel[i][j][k] = conv_kernel[i*CONV_1_SIZE+j*CONV_1_WH + k];
-			}*/
 		}
 	}
 	copy_input_1:
@@ -153,22 +146,24 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 
 */
 
-	float input[image_Batch][CONV_1_TYPE][CONV_2_INPUT_WH][CONV_2_INPUT_WH];
+//	float input[image_Batch][CONV_1_TYPE][CONV_2_INPUT_WH][CONV_2_INPUT_WH];
 	float kernel[CONV_2_TYPE][CONV_1_TYPE][CONV_2_WH][CONV_2_WH];
 	float bias[CONV_2_TYPE];
 	float output_buffer[image_Batch][CONV_2_TYPE][CONV_2_OUTPUT_SIZE];
-#pragma HLS array_partition variable=input cyclic factor=2 dim=3
-#pragma HLS array_partition variable=input cyclic factor=2 dim=4
-#pragma HLS array_partition variable=kernel cyclic factor=5 dim=3
-#pragma HLS array_partition variable=kernel cyclic factor=5 dim=4
+//#pragma HLS array_partition variable=input cyclic factor=2 dim=2
+//#pragma HLS array_partition variable=input cyclic factor=2 dim=3
+//#pragma HLS array_partition variable=input cyclic factor=2 dim=4
+//#pragma HLS array_partition variable=kernel cyclic factor=2 dim=1
+//#pragma HLS array_partition variable=kernel cyclic factor=5 dim=3
+//#pragma HLS array_partition variable=kernel cyclic factor=5 dim=4
 #pragma HLS array_partition variable=bias complete dim=0
-#pragma HLS array_partition variable=output_buffer cyclic factor=2 dim=2
+//#pragma HLS array_partition variable=output_buffer cyclic factor=2 dim=2
 	int col, row;
 	int col_f, row_f;
 	int depth_in, depth_out;
 	float temp = 0;
 	int batch_idx;
-
+/*
 	copy_input_1:
 	for(int batch=0;batch<image_Batch;batch++){
 		copy_input_2:
@@ -186,7 +181,7 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 			}
 		}
 	}
-
+*/
 
 	copy_kernel_1 :
 	for (int i = 0; i < CONV_2_TYPE; i++) {
@@ -197,8 +192,8 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 				copy_kernel_4 :
 				for(int l=0;l<CONV_2_WH;l++){
 #pragma HLS unroll
-					kernel[i][j][k][l] = conv_kernel[i*CONV_1_TYPE*CONV_2_WH*CONV_2_WH
-													 + j*CONV_2_WH*CONV_2_WH
+					kernel[i][j][k][l] = conv_kernel[i*CONV_1_TYPE*CONV_2_SIZE
+													 + j*CONV_2_SIZE
 													 + k*CONV_2_WH
 													 + l];
 				}
@@ -219,22 +214,36 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 			for (col = 0; col < CONV_2_OUTPUT_WH; col++) {
 				float output_buf[CONV_2_TYPE];
 				#pragma HLS array_partition variable=output_buf cyclic factor=2
+				float input[6][25];
+				#pragma HLS array_partition variable=input cyclic dim=2 factor=25
+				fetch_input:
+				for(int k=0;k<6;k++){
+					for(int i=0;i<5;i++){
+						for(int j=0;j<5;j++){
+						#pragma HLS pipeline
+							input[k][i*5+j] = input_feature[batch_idx*1176+k*196+(row+i)*14+col+j];
+						}
+					}
+				}
 				DEPTH_IN:
 				for(depth_in = 0; depth_in < CONV_1_TYPE; depth_in++){
+
 					DEPTH_OUT :
 					for (depth_out = 0; depth_out < CONV_2_TYPE; depth_out++) {
-#pragma HLS unroll factor=2
-						#pragma HLS pipeline II=5
+					#pragma HLS unroll factor=2
+					#pragma HLS pipeline II=5
 						float mult[CONV_2_SIZE]; // multiplication
-#pragma HLS array_partition variable=mult complete dim=0
+						#pragma HLS array_partition variable=mult complete dim=0
 
 						float acc=0.0f;
 						// Multiplication
+						Mult:
 						for(int i=0;i<CONV_2_WH;i++){
 						#pragma HLS unroll
 							for(int j=0;j<CONV_2_WH;j++){
-						#pragma HLS unroll
-								mult[i*5+j] = input[batch_idx][depth_in][row+i][col+j]*kernel[depth_out][depth_in][i][j];
+							#pragma HLS unroll
+								//mult[i*5+j] = input[batch_idx][depth_in][row+i][col+j]*kernel[depth_out][depth_in][i][j];
+								mult[i*5+j] = input[depth_in][i*5+j]*kernel[depth_out][depth_in][i][j];
 							}
 						}
 						Accumulate:
@@ -242,14 +251,6 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 						#pragma HLS unroll
 							acc += mult[i];
 						}
-						/*if(depth_in==0){
-							output_buffer[batch_idx][depth_out][row*10+col]
-										  = acc + bias[depth_out];
-						}
-						else{
-							output_buffer[batch_idx][depth_out][row*10+col]
-										  += acc;
-						}*/
 						output_buf[depth_out] += acc;
 					}
 
@@ -267,7 +268,7 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 		for(int j=0;j<CONV_2_TYPE;j++){
 			for(int k=0;k<CONV_2_OUTPUT_SIZE;k++){
 #pragma HLS pipeline
-				output_feature[i*100*16 + j*100 + k] = _tanh(output_buffer[i][j][k]);
+				output_feature[i*1600 + j*100 + k] = _tanh(output_buffer[i][j][k]);
 			}
 		}
 

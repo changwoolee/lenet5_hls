@@ -60,9 +60,9 @@ int main(void){
 	float bconv2[CONV_2_TYPE];
 	float Wconv3[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE];
 	float bconv3[CONV_3_TYPE];
-	float Wconv3_1[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE];
-	float Wconv3_2[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE];
-	float Wconv3_3[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE];
+	float Wconv3_1[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
+	float Wconv3_2[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
+	float Wconv3_3[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
 	float Wpool1[POOL_1_TYPE*4];
 	float bpool1[POOL_1_TYPE];
 	float Wpool2[POOL_2_TYPE*4];
@@ -100,13 +100,6 @@ int main(void){
 		Wconv3_3[i] = Wconv3[i+2*CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
 	}
 
-//	LENET_5 lenet5_sw;
-//	LENET_5_HW lenet5_hw;
-
-//	lenet5_sw.load_weights(Wconv1,bconv1,Wpool1,bpool1,Wconv2,bconv2,Wpool2,bpool2,Wconv3,bconv3,Wfc1,bfc1,Wfc2,bfc2);
-//	lenet5_hw.load_weights(Wconv1,bconv1,Wpool1,bpool1,Wconv2,bconv2,Wpool2,bpool2,Wconv3,bconv3,Wfc1,bfc1,Wfc2,bfc2);
-
-//	lenet5_sw.test(MNIST_IMG,MNIST_LABEL);
 
 	cout<<"LeNet-5(HW) test start"<<endl;
 	// Memory allocation
@@ -168,7 +161,7 @@ int main(void){
 		hw_ctr_pool2.stop();
 
 		hw_ctr_conv3.start();
-		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3);
+		CONVOLUTION_LAYER_3(pool2,Wconv3_1,Wconv3_2,Wconv3_3,bconv3,hconv3);
 		hw_ctr_conv3.stop();
 
 

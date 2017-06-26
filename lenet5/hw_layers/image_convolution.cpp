@@ -279,13 +279,17 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 // Function by Batch_size(10)
 // Input_feature_map[16][5x5],  Conv_kernel[120][16][5x5], Bias[120], Output_feature_map[120][1x1]
 void CONVOLUTION_LAYER_3(float input_feature[CONV_2_TYPE*image_Batch*CONV_3_INPUT_WH *CONV_3_INPUT_WH],
-		 float conv_kernel[CONV_3_TYPE*CONV_2_TYPE*CONV_3_WH * CONV_3_WH],
+		 float conv_kernel1[CONV_3_TYPE*CONV_2_TYPE*CONV_3_WH * CONV_3_WH/3],
+		 float conv_kernel2[CONV_3_TYPE*CONV_2_TYPE*CONV_3_WH * CONV_3_WH/3],
+		 float conv_kernel3[CONV_3_TYPE*CONV_2_TYPE*CONV_3_WH * CONV_3_WH/3],
 		 float conv_bias[CONV_3_TYPE],
 		 float output_feature[image_Batch * CONV_3_TYPE])
 {
 	static const int C3_N_PE = 1;
 #pragma HLS INTERFACE ap_fifo port=input_feature
-#pragma HLS INTERFACE bram port=conv_kernel
+//#pragma HLS INTERFACE bram port=conv_kernel1
+//#pragma HLS INTERFACE bram port=conv_kernel2
+//#pragma HLS INTERFACE bram port=conv_kernel3
 #pragma HLS INTERFACE ap_fifo port=output_feature
 //	float input[image_Batch][CONV_2_TYPE][CONV_3_INPUT_WH][CONV_3_INPUT_WH];
 //#pragma HLS array_partition variable=input cyclic factor=5 dim=3
@@ -356,10 +360,22 @@ void CONVOLUTION_LAYER_3(float input_feature[CONV_2_TYPE*image_Batch*CONV_3_INPU
 		for(int depth_in = 0; depth_in < CONV_2_TYPE; depth_in++){
 			float kernel[CONV_3_TYPE][CONV_3_SIZE];
 #pragma HLS array_partition variable=kernel cyclic factor=25 dim=2
-			for(int i=0;i<CONV_3_TYPE;i++){
+			for(int i=0;i<40;i++){
 				for(int j=0;j<CONV_3_SIZE;j++){
-#pragma HLS unroll factor=5
-					kernel[i][j] = conv_kernel[i*16*25+depth_in*25+j];
+				#pragma HLS unroll
+					kernel[i][j] = conv_kernel1[depth_in*40*25+i*25+j];
+				}
+			}
+			for(int i=0;i<40;i++){
+				for(int j=0;j<CONV_3_SIZE;j++){
+					#pragma HLS unroll
+					kernel[i+40][j] = conv_kernel2[depth_in*40*25+i*25+j];
+				}
+			}
+			for(int i=0;i<40;i++){
+				for(int j=0;j<CONV_3_SIZE;j++){
+					#pragma HLS unroll
+					kernel[i+80][j] = conv_kernel3[depth_in*40*25+i*25+j];
 				}
 			}
 			DEPTH_OUT :

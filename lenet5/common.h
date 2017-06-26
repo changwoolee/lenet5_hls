@@ -37,13 +37,6 @@
 #define POOL_1_TYPE 6
 #define POOL_1_SIZE 4
 
-#define CONV_2_OUTPUT_WH 28
-#define CONV_2_OUTPUT_SIZE 784
-#define CONV_2_INPUT_SIZE 1024
-#define CONV_2_INPUT_WH 32
-#define CONV_2_SIZE 25
-#define CONV_2_TYPE 120
-#define CONV_2_WH 5
 
 #define CONV_2_OUTPUT_WH 10
 #define CONV_2_OUTPUT_SIZE 100

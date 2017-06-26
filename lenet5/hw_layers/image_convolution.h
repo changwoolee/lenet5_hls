@@ -39,7 +39,10 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 //#pragma SDS data mem_attribute(input_feature:PHYSICAL_CONTIGUOUS,conv_kernel:PHYSICAL_CONTIGUOUS,conv_bias:PHYSICAL_CONTIGUOUS,output_feature:PHYSICAL_CONTIGUOUS)
 #pragma SDS data access_pattern(input_feature:SEQUENTIAL,conv_kernel:SEQUENTIAL,conv_bias:SEQUENTIAL,output_feature:SEQUENTIAL)
 void CONVOLUTION_LAYER_3(float input_feature[CONV_2_TYPE*image_Batch*CONV_3_INPUT_WH *CONV_3_INPUT_WH],
-						 float conv_kernel[CONV_3_TYPE*CONV_2_TYPE*CONV_3_WH * CONV_3_WH],
+
+		 float conv_kernel1[CONV_3_TYPE*CONV_2_TYPE*CONV_3_WH * CONV_3_WH/3],
+		 float conv_kernel2[CONV_3_TYPE*CONV_2_TYPE*CONV_3_WH * CONV_3_WH/3],
+		 float conv_kernel3[CONV_3_TYPE*CONV_2_TYPE*CONV_3_WH * CONV_3_WH/3],
 						 float conv_bias[CONV_3_TYPE],
 						 float output_feature[image_Batch * CONV_3_TYPE]);
 

@@ -149,7 +149,7 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 */
 //#pragma HLS INTERFACE ap_memory port=input_feature
 //#pragma HLS INTERFACE ap_memory port=output_feature
-	static const int C2_N_PE = 2;
+	static const int C2_N_PE = 1;
 //#pragma HLS INTERFACE bram port=input_feature
 //#pragma HLS INTERFACE bram port=output_feature
 //	float input[image_Batch][CONV_1_TYPE][CONV_2_INPUT_WH][CONV_2_INPUT_WH];

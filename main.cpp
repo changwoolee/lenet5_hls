@@ -162,6 +162,7 @@ int main(void){
 
 		hw_ctr_conv3.start();
 		CONVOLUTION_LAYER_3(pool2,Wconv3_1,Wconv3_2,Wconv3_3,bconv3,hconv3);
+		//CONVOLUTION_LAYER_3_SW(pool2,Wconv3,bconv3,hconv3);
 		hw_ctr_conv3.stop();
 
 

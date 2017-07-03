@@ -155,6 +155,7 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 //	float input[image_Batch][CONV_1_TYPE][CONV_2_INPUT_WH][CONV_2_INPUT_WH];
 	float kernel[CONV_2_TYPE][CONV_1_TYPE][CONV_2_WH][CONV_2_WH];
 	float bias[CONV_2_TYPE];
+#pragma HLS DATAFLOW
 	//float output_buffer[image_Batch][CONV_2_TYPE][CONV_2_OUTPUT_SIZE];
 //#pragma HLS array_partition variable=input cyclic factor=2 dim=2
 //#pragma HLS array_partition variable=input cyclic factor=2 dim=3
@@ -214,6 +215,7 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 		for (int row = 0; row < CONV_2_OUTPUT_WH; row++) {
 			COL	 :
 			for (int col = 0; col < CONV_2_OUTPUT_WH; col++) {
+#pragma HLS DATAFLOW
 				float output_buf[CONV_2_TYPE];
 				#pragma HLS array_partition variable=output_buf cyclic factor=C2_N_PE
 				float input[CONV_1_TYPE][CONV_2_SIZE];
@@ -422,4 +424,3 @@ void CONVOLUTION_LAYER_3(float input_feature[CONV_2_TYPE*image_Batch*CONV_3_INPU
 }
 		
 
-		

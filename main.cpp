@@ -52,6 +52,7 @@ int main(void){
 	// read MNIST data & label
 	READ_MNIST_DATA("/mnt/LeNet5/MNIST_DATA/t10k-images.idx3-ubyte",MNIST_IMG,image_Move);
 	READ_MNIST_LABEL("/mnt/LeNet5/MNIST_DATA/t10k-labels.idx1-ubyte",MNIST_LABEL,image_Move,false);
+	const int conv_weight_size = CONV_1_TYPE*CONV_1_SIZE + CONV_1_TYPE + CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE + CONV_2_TYPE + CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE+CONV_3_TYPE;
 
 	float Wconv1[CONV_1_TYPE*CONV_1_SIZE];
 	//float* Wconv1= (float*) sds_alloc(CONV_1_TYPE*CONV_1_SIZE*sizeof(float));
@@ -60,9 +61,14 @@ int main(void){
 	float bconv2[CONV_2_TYPE];
 	float Wconv3[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE];
 	float bconv3[CONV_3_TYPE];
-	//float Wconv3_1[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
-	//float Wconv3_2[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
-	//float Wconv3_3[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
+	/*
+	float* weights = (float*) sds_alloc( conv_weight_size * sizeof(float));
+	float* Wconv1 = weights;
+	float* bconv1 = weights + CONV_1_TYPE*CONV_1_SIZE;
+	float* Wconv2 = bconv1 + CONV_1_TYPE;
+	float* bconv2 = Wconv2 + CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE;
+	float* Wconv3 = bconv2 + CONV_2_TYPE;
+	float* bconv3 = Wconv3 + CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE;*/
 	float Wpool1[POOL_1_TYPE*4];
 	float bpool1[POOL_1_TYPE];
 	float Wpool2[POOL_2_TYPE*4];
@@ -93,13 +99,6 @@ int main(void){
 
 	load_model("/mnt/LeNet5/filter/LeNet-weights_Fc_1_Bias.txt",bfc1,BIAS_NN_1_SIZE);
 	load_model("/mnt/LeNet5/filter/LeNet-weights_Fc_2_Bias.txt",bfc2,BIAS_NN_2_SIZE);
-/*
-	for(int i=0;i<CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3;i++){
-		Wconv3_1[i] = Wconv3[i];
-		Wconv3_2[i] = Wconv3[i+CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
-		Wconv3_3[i] = Wconv3[i+2*CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
-	}
-*/
 
 	cout<<"LeNet-5(HW) test start"<<endl;
 	// Memory allocation
@@ -141,6 +140,7 @@ int main(void){
 
 		// C1 start
 		hw_ctr_conv1.start(); // counter for C1 layer
+		//CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1,6*25,6);
 		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1);
 		hw_ctr_conv1.stop();
 //		cout<<".";
@@ -152,6 +152,7 @@ int main(void){
 
 		//C2 start
 		hw_ctr_conv2.start();
+		//CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2,6*16*25,16);
 		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2);
 		hw_ctr_conv2.stop();
 //		cout<<".";
@@ -161,7 +162,7 @@ int main(void){
 		hw_ctr_pool2.stop();
 
 		hw_ctr_conv3.start();
-		//CONVOLUTION_LAYER_3(pool2,Wconv3_1,Wconv3_2,Wconv3_3,bconv3,hconv3);
+		//CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3,16*120*25,120);
 		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3);
 		hw_ctr_conv3.stop();
 
@@ -245,7 +246,7 @@ int main(void){
 	sds_free(pool1);
 	sds_free(pool2);
 	sds_free(output);
-
+	//sds_free(weights);
 	free(MNIST_IMG);
 	free(MNIST_LABEL);
 	

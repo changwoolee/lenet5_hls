@@ -20,6 +20,12 @@ void CONVOLUTION_LAYER_2_SW(float* input_feature,
 							float* conv_kernel,
 							float* conv_bias,
 							float* output_feature);
+							
+void CONVOLUTION_LAYER_3_SW(float* input_feature,
+							float* conv_kernel,
+							float* conv_bias,
+							float* output_feature);
+							
 
 
 void CONVOLUTION_LAYER_1_SW(float* input_feature,
@@ -50,7 +56,6 @@ void CONVOLUTION_LAYER_1_SW(float* input_feature,
 
 					output_feature[(batch_cnt*CONV_1_TYPE + depth_out)*CONV_1_OUTPUT_WH*CONV_1_OUTPUT_WH +
 									  CONV_1_OUTPUT_WH * row + col] = tanhf(temp+conv_bias[depth_out]);
-					//output_feature[batch_cnt * CONV_1_TYPE + depth_out][CONV_1_OUTPUT_WH * row + col] = temp;// (temp + conv_bias[depth_out]);
 				}
 			}
 		}
@@ -62,10 +67,11 @@ void CONVOLUTION_LAYER_1_SW(float* input_feature,
 // Convolution Layer 2
 // Function by Batch_size(10)
 // Input_feature_map[6][14x14],  Conv_kernel[16][6][25], Bias[16], Output_feature_map[16][10x10]
-void CONVOLUTION_LAYER_2_SW(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_INPUT_WH *CONV_2_INPUT_WH],
-	float conv_kernel[CONV_2_TYPE*CONV_1_TYPE*CONV_2_WH * CONV_2_WH],
-	float conv_bias[CONV_2_TYPE],
-	float output_feature[CONV_2_TYPE * image_Batch*CONV_2_OUTPUT_WH * CONV_2_OUTPUT_WH])
+
+void CONVOLUTION_LAYER_2_SW(float* input_feature,
+							float* conv_kernel,
+							float* conv_bias,
+							float* output_feature)
 {
 	// Connection Table for Dummy Operation
 /*
@@ -118,7 +124,7 @@ void CONVOLUTION_LAYER_2_SW(float input_feature[CONV_1_TYPE * image_Batch*CONV_2
 							for (col_f = 0; col_f < CONV_2_WH; col_f++) {
 								//printf("Pixel is %.6f\n", conv_kernel[depth_out][depth_in][CONV_2_WH * row_f + col_f]);
 								temp += input_feature[(batch_idx * CONV_1_TYPE + depth_in)*CONV_2_INPUT_SIZE + CONV_2_INPUT_WH * (row_f + row) + col + col_f] *
-										conv_kernel[(depth_out*CONV_1_TYPE+depth_in)*25 + CONV_2_WH * row_f + col_f];
+										conv_kernel[(depth_in*CONV_2_TYPE+depth_out)*25 + CONV_2_WH * row_f + col_f];
 							}
 							//printf("\n");
 						}
@@ -136,9 +142,11 @@ void CONVOLUTION_LAYER_2_SW(float input_feature[CONV_1_TYPE * image_Batch*CONV_2
 // Convolution Layer 3 (FC)
 // Function by Batch_size(10)
 // Input_feature_map[16][5x5],  Conv_kernel[120][16][5x5], Bias[120], Output_feature_map[120][1x1]
-void CONVOLUTION_LAYER_3_SW(float input_feature[CONV_2_TYPE*image_Batch*CONV_3_INPUT_WH *CONV_3_INPUT_WH],
-						 float conv_kernel[CONV_3_TYPE*CONV_2_TYPE*CONV_3_WH * CONV_3_WH], float conv_bias[CONV_3_TYPE],
-						 float output_feature[image_Batch * CONV_3_TYPE])
+
+void CONVOLUTION_LAYER_3_SW(float* input_feature,
+							float* conv_kernel,
+							float* conv_bias,
+							float* output_feature)
 {
 	int col, row, col_f, row_f;
 	int depth_in, batch_cnt, depth_out;
@@ -156,7 +164,7 @@ void CONVOLUTION_LAYER_3_SW(float input_feature[CONV_2_TYPE*image_Batch*CONV_3_I
 				for (row_f = 0; row_f < CONV_3_WH; row_f++) {
 					for (col_f = 0; col_f < CONV_3_WH; col_f++) {
 						temp += input_feature[(POOL_2_TYPE * batch_cnt + depth_in)*CONV_3_WH*CONV_3_WH + CONV_3_WH * row_f + col_f] *
-								conv_kernel[(depth_out+depth_in)*CONV_3_WH*CONV_3_WH+CONV_3_WH * row_f + col_f];
+								conv_kernel[(depth_in*CONV_3_TYPE+depth_out)*5*5+row_f*5 + col_f];
 					}
 				}
 			}

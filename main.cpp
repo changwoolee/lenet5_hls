@@ -60,9 +60,9 @@ int main(void){
 	float bconv2[CONV_2_TYPE];
 	float Wconv3[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE];
 	float bconv3[CONV_3_TYPE];
-	float Wconv3_1[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
-	float Wconv3_2[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
-	float Wconv3_3[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
+	//float Wconv3_1[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
+	//float Wconv3_2[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
+	//float Wconv3_3[CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
 	float Wpool1[POOL_1_TYPE*4];
 	float bpool1[POOL_1_TYPE];
 	float Wpool2[POOL_2_TYPE*4];
@@ -93,13 +93,13 @@ int main(void){
 
 	load_model("/mnt/LeNet5/filter/LeNet-weights_Fc_1_Bias.txt",bfc1,BIAS_NN_1_SIZE);
 	load_model("/mnt/LeNet5/filter/LeNet-weights_Fc_2_Bias.txt",bfc2,BIAS_NN_2_SIZE);
-
+/*
 	for(int i=0;i<CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3;i++){
 		Wconv3_1[i] = Wconv3[i];
 		Wconv3_2[i] = Wconv3[i+CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
 		Wconv3_3[i] = Wconv3[i+2*CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE/3];
 	}
-
+*/
 
 	cout<<"LeNet-5(HW) test start"<<endl;
 	// Memory allocation
@@ -161,8 +161,8 @@ int main(void){
 		hw_ctr_pool2.stop();
 
 		hw_ctr_conv3.start();
-		CONVOLUTION_LAYER_3(pool2,Wconv3_1,Wconv3_2,Wconv3_3,bconv3,hconv3);
-		//CONVOLUTION_LAYER_3_SW(pool2,Wconv3,bconv3,hconv3);
+		//CONVOLUTION_LAYER_3(pool2,Wconv3_1,Wconv3_2,Wconv3_3,bconv3,hconv3);
+		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3);
 		hw_ctr_conv3.stop();
 
 

@@ -184,7 +184,7 @@ int main(void){
 	accuracy_hw = 1.0*accumulate(result_hw.begin(),result_hw.end(),0.0)/result_hw.size();
 	cout<<"HW test completed"<<endl;
 	cout<<"accuracy : "<<accuracy_hw<<endl;
-
+#ifndef HW_TEST
 	// SW test
 	cout<< "SW test start"<<endl;
 	for(int i=0;i<test_num;i++){
@@ -237,7 +237,7 @@ int main(void){
 	accuracy_sw = 1.0*accumulate(result_sw.begin(),result_sw.end(),0.0)/result_sw.size();
 	cout<<"SW test completed"<<endl;
 	cout<<"accuracy : "<<accuracy_sw<<endl;
-
+#endif
 	sds_free(input_layer);
 	sds_free(hconv1);
 	sds_free(hconv2);
@@ -248,7 +248,8 @@ int main(void){
 
 	free(MNIST_IMG);
 	free(MNIST_LABEL);
-
+	
+#ifndef HW_TEST
 	stringstream ss;
 	ss <<"----------------------------------------------------------------------------"<<endl;
 	double speedup_c1 = (double) sw_ctr_conv1.avg_cpu_cycles() / (double) hw_ctr_conv1.avg_cpu_cycles();
@@ -294,10 +295,10 @@ int main(void){
 	ss <<"Speed up: "<<speedup_tot<<endl;
 	ss <<"----------------------------------------------------------------------------"<<endl;
 	cout<<ss.str();
-	cout<<"Test Completed"<<endl;
 
 	print_log("/mnt/model_log/performance.log",&ss);
-
+#endif
+	cout<<"Test Completed"<<endl;
 	return 0;
 
 }

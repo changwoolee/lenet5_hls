@@ -24,9 +24,9 @@ void FULLY_CONNECTED_LAYER_2_SW(float* input_feature, float* weights, float* bia
 		for (int j = 0; j < OUTPUT_NN_2_SIZE; j++) {
 			float temp = 0;
 			for (int i = 0; i < INPUT_NN_2_SIZE; i++) {
-				temp += input_feature[batch*120 + i] * weights[i*84 + j];
+				temp += input_feature[batch*84 + i] * weights[i*10 + j];
 			}
-			output_feature[batch*84 + j] = tanhf(temp + bias[j]);
+			output_feature[batch*10 + j] = tanhf(temp + bias[j]);
 		}
 	}
 }

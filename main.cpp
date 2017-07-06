@@ -69,10 +69,10 @@ int main(void){
 	float* bconv2 = Wconv2 + CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE;
 	float* Wconv3 = bconv2 + CONV_2_TYPE;
 	float* bconv3 = Wconv3 + CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE;*/
-	float Wpool1[POOL_1_TYPE*4];
-	float bpool1[POOL_1_TYPE];
-	float Wpool2[POOL_2_TYPE*4];
-	float bpool2[POOL_2_TYPE];
+	//float Wpool1[POOL_1_TYPE*4];
+	//float bpool1[POOL_1_TYPE];
+	//float Wpool2[POOL_2_TYPE*4];
+	//float bpool2[POOL_2_TYPE];
 
 	float Wfc1[FILTER_NN_1_SIZE];
 	float bfc1[BIAS_NN_1_SIZE];
@@ -80,25 +80,25 @@ int main(void){
 	float bfc2[BIAS_NN_2_SIZE];
 
 	cout<<"Load models"<<endl;
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Conv_1.txt",Wconv1,CONV_1_TYPE*CONV_1_SIZE);
-	load_model("/mnt/LeNet5/filter/LeNet-weights_CONV_2_Dummy.txt",Wconv2,CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE);
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Conv_3.txt",Wconv3,CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE);
+	load_model("/mnt/LeNet5/filter/Wconv1.mdl",Wconv1,CONV_1_TYPE*CONV_1_SIZE);
+	load_model("/mnt/LeNet5/filter/Wconv3.mdl",Wconv2,CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE);
+	load_model("/mnt/LeNet5/filter/Wconv5.mdl",Wconv3,CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE);
 
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Conv_1_Bias.txt",bconv1,CONV_1_TYPE);
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Conv_2_Bias.txt",bconv2,CONV_2_TYPE);
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Conv_3_Bias.txt",bconv3,CONV_3_TYPE);
+	load_model("/mnt/LeNet5/filter/bconv1.mdl",bconv1,CONV_1_TYPE);
+	load_model("/mnt/LeNet5/filter/bconv3.mdl",bconv2,CONV_2_TYPE);
+	load_model("/mnt/LeNet5/filter/bconv5.mdl",bconv3,CONV_3_TYPE);
 
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Pool_1.txt",Wpool1,POOL_1_TYPE*4);
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Pool_2.txt",Wpool2,POOL_2_TYPE*4);
+	//load_model("/mnt/LeNet5/filter/LeNet-weights_Pool_1.txt",Wpool1,POOL_1_TYPE*4);
+	//load_model("/mnt/LeNet5/filter/LeNet-weights_Pool_2.txt",Wpool2,POOL_2_TYPE*4);
 
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Pool_1_Bias.txt",bpool1,POOL_1_TYPE);
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Pool_2_Bias.txt",bpool2,POOL_2_TYPE);
+	//load_model("/mnt/LeNet5/filter/LeNet-weights_Pool_1_Bias.txt",bpool1,POOL_1_TYPE);
+	//load_model("/mnt/LeNet5/filter/LeNet-weights_Pool_2_Bias.txt",bpool2,POOL_2_TYPE);
 
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Fc_1.txt",Wfc1,FILTER_NN_1_SIZE);
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Fc_2.txt",Wfc2,FILTER_NN_2_SIZE);
+	load_model("/mnt/LeNet5/filter/Wfc1.mdl",Wfc1,FILTER_NN_1_SIZE);
+	load_model("/mnt/LeNet5/filter/Wfc2.mdl",Wfc2,FILTER_NN_2_SIZE);
 
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Fc_1_Bias.txt",bfc1,BIAS_NN_1_SIZE);
-	load_model("/mnt/LeNet5/filter/LeNet-weights_Fc_2_Bias.txt",bfc2,BIAS_NN_2_SIZE);
+	load_model("/mnt/LeNet5/filter/bfc1.mdl",bfc1,BIAS_NN_1_SIZE);
+	load_model("/mnt/LeNet5/filter/bfc2.mdl",bfc2,BIAS_NN_2_SIZE);
 
 	cout<<"LeNet-5(HW) test start"<<endl;
 	// Memory allocation
@@ -134,51 +134,102 @@ int main(void){
 	for(int i=0;i<test_num;i++){
 		for(int batch=0;batch<image_Batch*INPUT_WH*INPUT_WH;batch++)
 			input_layer[batch] = MNIST_IMG[i*MNIST_PAD_SIZE + batch];
-
-
+	/*	for(int i=0;i<32;i++){
+			for(int j=0;j<32;j++){
+				printf("%1.1f ",input_layer[i*32+j]);
+			}
+			cout<<"\n";
+		}
+		cout<<"\n";*/
 		hw_ctr_tot.start();// counter for total test
 
 		// C1 start
 		hw_ctr_conv1.start(); // counter for C1 layer
 		//CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1,6*25,6);
-		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1);
+		CONVOLUTION_LAYER_1_SW(input_layer,Wconv1,bconv1,hconv1);
 		hw_ctr_conv1.stop();
-//		cout<<".";
+
+	/*	for(int i=0;i<6;i++){
+			for(int j=0;j<28;j++){
+				for(int k=0;k<28;k++){
+					printf("%1.1f ",hconv1[i*28*28+j*28+k]);
+				}
+				cout<<"\n";
+			}
+			cout<<"\n";
+		}
+*/
 		// S1 start
 		hw_ctr_pool1.start();
-		POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
-		//MAXPOOL_1_SW(hconv1,pool1);
+		//POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
+		MAXPOOL_1_SW(hconv1,pool1);
 		hw_ctr_pool1.stop();
-
+		/*for(int i=0;i<6;i++){
+			for(int j=0;j<14;j++){
+				for(int k=0;k<14;k++){
+					//if(pool1[i*14*14+j*14+k]!=0)
+					//	cout<<"*";
+					//else
+					//	cout<<" ";
+					printf("%1.1f ",pool1[i*14*14+j*14+k]);
+				}
+				cout<<"\n";
+			}
+			cout<<"\n";
+		}*/
 		//C2 start
 		hw_ctr_conv2.start();
 		//CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2,6*16*25,16);
-		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2);
+		CONVOLUTION_LAYER_2_SW(pool1,Wconv2,bconv2,hconv2);
 		hw_ctr_conv2.stop();
-//		cout<<".";
+		/*for(int i=0;i<16;i++){
+					for(int j=0;j<10;j++){
+						for(int k=0;k<10;k++){
+							printf("%1.1f ",hconv2[i*100+j*10+k]);
+						}
+						cout<<"\n";
+					}
+					cout<<"\n";
+				}*/
 		hw_ctr_pool2.start();
-		POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
-		//MAXPOOL_2_SW(hconv2,pool2);
+		//POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
+		MAXPOOL_2_SW(hconv2,pool2);
 		hw_ctr_pool2.stop();
-
+	/*	for(int i=0;i<16;i++){
+					for(int j=0;j<5;j++){
+						for(int k=0;k<5;k++){
+							printf("%1.1f ",hconv1[i*25+j*5+k]);
+						}
+						cout<<"\n";
+					}
+					cout<<"\n";
+				}*/
 		hw_ctr_conv3.start();
 		//CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3,16*120*25,120);
-		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3);
+		CONVOLUTION_LAYER_3_SW(pool2,Wconv3,bconv3,hconv3);
 		hw_ctr_conv3.stop();
 
-
+/*		for(int i=0;i<120;i++){
+			printf("%1.1f ",hconv3[i]);
+		}
+		cout<<"\n";
+*/
 		hw_ctr_fc1.start();
 		FULLY_CONNECTED_LAYER_1_SW(hconv3,Wfc1,bfc1,hfc1);
 		hw_ctr_fc1.stop();
-
-
+	/*	for(int i=0;i<84;i++){
+					printf("%1.1f ",hfc1[i]);
+				}cout<<"\n";
+		*/
 		hw_ctr_fc2.start();
 		FULLY_CONNECTED_LAYER_2_SW(hfc1,Wfc2,bfc2,output);
 		hw_ctr_fc2.stop();
 
 		hw_ctr_tot.stop();
-
-
+		/*for(int i=0;i<10;i++){
+					printf("%f ",output[i]);
+				}cout<<"\n";
+				*/
 		result_hw.push_back(equal(MNIST_LABEL[i],argmax(output)));
 	}
 	// accuracy estimation
@@ -202,8 +253,8 @@ int main(void){
 
 		// S1 start
 		sw_ctr_pool1.start();
-		POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
-		//MAXPOOL_1_SW(hconv1,pool1);
+		//POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
+		MAXPOOL_1_SW(hconv1,pool1);
 		sw_ctr_pool1.stop();
 
 		//C2 start
@@ -212,8 +263,8 @@ int main(void){
 		sw_ctr_conv2.stop();
 
 		sw_ctr_pool2.start();
-		POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
-		//MAXPOOL_2_SW(hconv2,pool2);
+		//POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
+		MAXPOOL_2_SW(hconv2,pool2);
 		sw_ctr_pool2.stop();
 
 		sw_ctr_conv3.start();

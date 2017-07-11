@@ -1,5 +1,5 @@
 #include <lenet5/hw_layers/image_convolution.h>
-#include "hls_math.h"
+//#include "hls_math.h"
 
 void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 		float conv_kernel[CONV_1_TYPE*25],
@@ -91,9 +91,8 @@ void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 float _tanh(float x){
 #pragma HLS INLINE
 #pragma HLS pipeline
-	float exp2x = hls::expf(2*x)+1;
+	float exp2x = expf(2*x)+1;
 	return (exp2x-2)/(exp2x);
-	//return hls::sinhf(x)/hls::coshf(x);
 }
 
 float relu(float x){
@@ -257,13 +256,11 @@ void CONVOLUTION_LAYER_3(float input_feature[CONV_2_TYPE*image_Batch*CONV_3_INPU
 						 float output_feature[image_Batch*CONV_3_TYPE]
 						 )
 {
-	const int C3_N_PE = 8;
-	const int C3_acc_unroll=C3_N_PE/4;
 	float input[image_Batch][CONV_2_TYPE][CONV_3_INPUT_WH][CONV_3_INPUT_WH];
-#pragma HLS array_partition variable=input cyclic factor=C3_N_PE dim=2
+#pragma HLS array_partition variable=input complete dim=2
 //#pragma HLS array_partition variable=input complete dim=4
 	float kernel[CONV_2_TYPE][120][CONV_3_WH][CONV_3_WH];
-#pragma HLS array_partition variable=kernel cyclic factor=C3_N_PE dim=1
+#pragma HLS array_partition variable=kernel complete dim=1
 //#pragma HLS array_partition variable=kernel complete dim=4
 
 	float bias[CONV_3_TYPE];
@@ -312,20 +309,18 @@ void CONVOLUTION_LAYER_3(float input_feature[CONV_2_TYPE*image_Batch*CONV_3_INPU
 				D_OUT:
 				for(int co=0;co<120;co++){
 				#pragma HLS pipeline II=1
-						float mult[16];
-#pragma HLS array_partition variable=mult complete dim=0
+					float mult[16];
+					#pragma HLS array_partition variable=mult complete dim=0
 					float acc[4];
-#pragma HLS array_partition variable=acc complete dim=0
+					#pragma HLS array_partition variable=acc complete dim=0
 					float result=0;
 						D_IN:
 					for(int ci=0;ci<16;ci++){
-#pragma HLS unroll factor=8
-					#pragma HLS pipeline
+					#pragma HLS unroll
 						mult[ci] = input[batch_cnt][ci][row_k][col_k]*kernel[ci][co][row_k][col_k];
 					}
 					for(int i=0,ii=0;i<4;i++,ii+=4){
-					#pragma HLS unroll factor=2
-					#pragma HLS pipeline
+					#pragma HLS unroll
 						acc[i] = (mult[ii]+mult[ii+1])+(mult[ii+2]+mult[ii+3]);
 					}
 					result = (acc[0]+acc[1])+(acc[2]+acc[3]);

@@ -90,7 +90,7 @@ void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 
 float _tanh(float x){
 #pragma HLS INLINE
-#pragma HLS pipeline
+//#pragma HLS pipeline
 	float exp2x = expf(2*x)+1;
 	return (exp2x-2)/(exp2x);
 }
@@ -184,6 +184,7 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 			}
 		}
 	}
+
 	copy_bias:
 	for(int i=0;i<CONV_2_TYPE;i++){
 #pragma HLS pipeline II=1
@@ -212,7 +213,6 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 							float acc=0;
 							DEPTH_IN:
 							for (int depth_in = 0; depth_in < CONV_1_TYPE; depth_in++) {
-
 							#pragma HLS unroll
 								mult[depth_in] = input[batch_cnt][depth_in][row+row_k][col+col_k] *
 										kernel[depth_in][depth_out][row_k][col_k];
@@ -240,6 +240,7 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 		}
 
 	}
+
 }
 
 

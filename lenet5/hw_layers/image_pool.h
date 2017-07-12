@@ -73,8 +73,7 @@ void POOLING_LAYER_2(float src[POOL_2_TYPE * image_Batch*POOL_2_INPUT_WH * POOL_
 	}
 }
 
-
-void MAXPOOL_1(float* src, float* dst){
+void MAXPOOL_1_SW(float* src, float* dst){
 	for(int batch=0;batch<image_Batch;batch++){
 		for(int depth=0;depth<POOL_1_TYPE;depth++){
 			for(int row=0;row<POOL_1_OUTPUT_WH;row++){
@@ -95,7 +94,7 @@ void MAXPOOL_1(float* src, float* dst){
 		}
 	}
 }
-void MAXPOOL_2(float* src, float* dst){
+void MAXPOOL_2_SW(float* src, float* dst){
 	for(int batch=0;batch<image_Batch;batch++){
 		for(int depth=0;depth<POOL_2_TYPE;depth++){
 			for(int row=0;row<POOL_2_OUTPUT_WH;row++){

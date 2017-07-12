@@ -4,7 +4,7 @@
 void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 		float conv_kernel[CONV_1_TYPE*25],
 		float conv_bias[CONV_1_TYPE],
-		float output_feature[image_Batch*CONV_1_TYPE*CONV_1_OUTPUT_SIZE]
+		float output_feature[image_Batch*CONV_1_TYPE*CONV_1_OUTPUT_SIZE/4]
 		)
 {
 	float input[image_Batch][INPUT_WH][INPUT_WH];
@@ -80,25 +80,18 @@ void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 		for(int j=0;j<6;j++){
 			for(int k=0;k<784;k++){
 #pragma HLS PIPELINE II=1
-				output_feature[i*6*28*28+j*784+k] = _tanh(output[i][j][k]+bias[j]);
+				//output_feature[i*6*28*28+j*784+k] = _tanh(output[i][j][k]+bias[j]);
+				output[i][j][k]=output[i][j][k]+bias[j];
 			}
 		}
 
 	}
+	
+	MAXPOOL_1(output,output_feature);
 
+	
 }
 
-float _tanh(float x){
-#pragma HLS INLINE
-//#pragma HLS pipeline
-	float exp2x = expf(2*x)+1;
-	return (exp2x-2)/(exp2x);
-}
-
-float relu(float x){
-#pragma HLS inline
-	return x>0 ? x : 0;
-}
 void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_INPUT_WH *CONV_2_INPUT_WH],
 		float conv_kernel[CONV_2_TYPE*CONV_1_TYPE*CONV_2_WH * CONV_2_WH],
 		float conv_bias[CONV_2_TYPE],
@@ -235,11 +228,13 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 			int depth_offset = j*100;
 			for(int k=0;k<CONV_2_OUTPUT_SIZE;k++){
 #pragma HLS pipeline II=1
-				output_feature[i*1600 + depth_offset + k] = _tanh(output[i][j][k]+bias[j]);
+				//output_feature[i*1600 + depth_offset + k] = _tanh(output[i][j][k]+bias[j]);
+				output[i][j][k]=output[i][j][k]+bias[j];
 			}
 		}
 
 	}
+	MAXPOOL_2(output,output_feature);
 
 }
 

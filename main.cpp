@@ -153,7 +153,7 @@ int main(void){
 		// C1 start
 		hw_ctr_conv1.start(); // counter for C1 layer
 		//CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1,6*25,6);
-		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1);
+		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,pool1);
 		hw_ctr_conv1.stop();
 	/*	for(int i=0;i<6;i++){
 			for(int j=0;j<28;j++){
@@ -168,7 +168,7 @@ int main(void){
 		// S1 start
 		hw_ctr_pool1.start();
 		//POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
-		MAXPOOL_1_SW(hconv1,pool1);
+		//MAXPOOL_1_SW(hconv1,pool1);
 		hw_ctr_pool1.stop();
 	/*	for(int i=0;i<6;i++){
 			for(int j=0;j<14;j++){
@@ -186,7 +186,7 @@ int main(void){
 		//C2 start
 		hw_ctr_conv2.start();
 		//CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2,6*16*25,16);
-		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2);
+		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,pool2);
 		hw_ctr_conv2.stop();
 	/*	for(int i=0;i<16;i++){
 					for(int j=0;j<10;j++){
@@ -199,7 +199,7 @@ int main(void){
 				}*/
 		hw_ctr_pool2.start();
 		//POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
-		MAXPOOL_2_SW(hconv2,pool2);
+		//MAXPOOL_2_SW(hconv2,pool2);
 		hw_ctr_pool2.stop();
 	/*	for(int i=0;i<16;i++){
 					for(int j=0;j<5;j++){

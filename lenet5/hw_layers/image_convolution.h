@@ -1,5 +1,6 @@
 #include "../common.h"
-
+#include "./image_pool.h"
+#include "./activation.h"
 #define CONV_2_SIZE 25
 
 
@@ -9,7 +10,7 @@
 void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 		float conv_kernel[CONV_1_TYPE*25],
 		float conv_bias[CONV_1_TYPE],
-		float output_feature[image_Batch*CONV_1_TYPE*CONV_1_OUTPUT_SIZE]
+		float output_feature[image_Batch*CONV_1_TYPE*CONV_1_OUTPUT_SIZE/4]
 		);
 
 #pragma SDS data access_pattern(input_feature:SEQUENTIAL,conv_kernel:SEQUENTIAL,conv_bias:SEQUENTIAL,output_feature:SEQUENTIAL)
@@ -18,7 +19,7 @@ void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_INPUT_WH *CONV_2_INPUT_WH],
 	float conv_kernel[CONV_2_TYPE*CONV_1_TYPE*CONV_2_WH * CONV_2_WH],
 	float conv_bias[CONV_2_TYPE],
-	float output_feature[CONV_2_TYPE * image_Batch*CONV_2_OUTPUT_WH * CONV_2_OUTPUT_WH]
+	float output_feature[CONV_2_TYPE * image_Batch*CONV_2_OUTPUT_WH * CONV_2_OUTPUT_WH/4]
 	);
 
 #pragma SDS data access_pattern(input_feature:SEQUENTIAL,conv_kernel:SEQUENTIAL,conv_bias:SEQUENTIAL,output_feature:SEQUENTIAL)

@@ -5,8 +5,8 @@
  *      Author: woobes
  */
 
-#ifndef SRC_SW_LAYERS_IMAGE_FULLYCONNECTED_H_
-#define SRC_SW_LAYERS_IMAGE_FULLYCONNECTED_H_
+#ifndef SRC_HW_LAYERS_IMAGE_FULLYCONNECTED_H_
+#define SRC_HW_LAYERS_IMAGE_FULLYCONNECTED_H_
 
 void FULLY_CONNECTED_LAYER_1(float* input_feature, float* weights, float* bias, float* output_feature){
 	for (int batch = 0; batch < image_Batch; batch++) {

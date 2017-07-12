@@ -1,6 +1,6 @@
 #include "../common.h"
-#include "./image_pool.h"
-#include "./activation.h"
+#include "activation.h"
+#include <lenet5/hw_layers/image_pool.h>
 #define CONV_2_SIZE 25
 
 

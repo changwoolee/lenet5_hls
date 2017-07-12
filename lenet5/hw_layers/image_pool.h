@@ -1,17 +1,17 @@
 /*
  * image_pool.h
  *
- *  Created on: 2017. 5. 21.
+ *  Created on: 2017. 7. 12.
  *      Author: woobes
  */
 
-#ifndef SRC_SW_LAYERS_IMAGE_POOL_H_
-#define SRC_SW_LAYERS_IMAGE_POOL_H_
-#include "../common.h"
-#include "./activation.h"
-void MAXPOOL_1(float* src, float* dst);
-void MAXPOOL_2(float* src, float* dst);
-void POOLING_LAYER_1(float src[POOL_1_TYPE * image_Batch*POOL_1_INPUT_WH * POOL_1_INPUT_WH],
+#ifndef SRC_LENET5_HW_LAYERS_IMAGE_POOL_H_
+#define SRC_LENET5_HW_LAYERS_IMAGE_POOL_H_
+
+#include "activation.h"
+void MAXPOOL_1(float OutputBuffer[image_Batch][6][28*28], float dst[image_Batch*6*14*14]);
+void MAXPOOL_2(float OutputBuffer[image_Batch][16][10*10], float dst[image_Batch*16*5*5]);
+/*void POOLING_LAYER_1(float src[POOL_1_TYPE * image_Batch*POOL_1_INPUT_WH * POOL_1_INPUT_WH],
 					float pool_kernel[POOL_1_TYPE*POOL_1_SIZE],
 					float pool_bias[POOL_1_TYPE],
 					float dst[POOL_1_TYPE * image_Batch*POOL_1_OUTPUT_WH * POOL_1_OUTPUT_WH],
@@ -75,4 +75,6 @@ void POOLING_LAYER_2(float src[POOL_2_TYPE * image_Batch*POOL_2_INPUT_WH * POOL_
 	}
 }
 
-#endif /* SRC_SW_LAYERS_IMAGE_POOL_H_ */
+*/
+
+#endif /* SRC_LENET5_HW_LAYERS_IMAGE_POOL_H_ */

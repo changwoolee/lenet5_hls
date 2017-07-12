@@ -1,4 +1,4 @@
-#include "./activation.h"
+#include <lenet5/hw_layers/activation.h>
 
 
 float _tanh(float x){

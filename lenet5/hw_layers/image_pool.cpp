@@ -1,14 +1,14 @@
 /*
  * image_pool.cpp
  *
- *  Created on: 2017. 5. 21.
+ *  Created on: 2017. 7. 12.
  *      Author: woobes
  */
 
-#include "./image_pool.h"
 
+#include <lenet5/hw_layers/image_pool.h>
 
-void MAXPOOL_1(float OutputBuffer[image_Batch][6][28][28], float* dst){
+void MAXPOOL_1(float OutputBuffer[image_Batch][6][28*28], float dst[image_Batch*6*14*14]){
 	#pragma HLS INLINE
 	for(int batch=0;batch<image_Batch;batch++){
 		for(int depth=0;depth<POOL_1_TYPE;depth++){
@@ -19,14 +19,14 @@ void MAXPOOL_1(float OutputBuffer[image_Batch][6][28][28], float* dst){
 					float a00, a01, a10, a11;
 					int rr = row<<1;
 					int cc = col<<1;
-					a00 = OutputBuffer[batch][depth][rr][cc];
-					a01 = OutputBuffer[batch][depth][rr][cc+1];
-					a10 = OutputBuffer[batch][depth][rr+1][cc];
-					a11 = OutputBuffer[batch][depth][rr+1][cc+1];
+					a00 = OutputBuffer[batch][depth][rr*28+cc];
+					a01 = OutputBuffer[batch][depth][rr*28+cc+1];
+					a10 = OutputBuffer[batch][depth][(rr+1)*28+cc];
+					a11 = OutputBuffer[batch][depth][(rr+1)*28+cc+1];
 					max1 = a00 > a01 ? a00 : a01;
 					max2 = a10 > a11 ? a10 : a11;
 					max  = max1 > max2 ? max1 : max2;
-					
+
 					/*
 					for(int row_w=0;row_w<2;row_w++){
 						for(int col_w=0;col_w<2;col_w++){
@@ -43,26 +43,26 @@ void MAXPOOL_1(float OutputBuffer[image_Batch][6][28][28], float* dst){
 		}
 	}
 }
-void MAXPOOL_2(float OutputBuffer[image_Batch][16][10][10], float* dst){
+void MAXPOOL_2(float OutputBuffer[image_Batch][16][10*10], float dst[image_Batch*16*5*5]){
 	#pragma HLS INLINE
 	for(int batch=0;batch<image_Batch;batch++){
 		for(int depth=0;depth<POOL_2_TYPE;depth++){
 			for(int row=0;row<POOL_2_OUTPUT_WH;row++){
 				for(int col=0;col<POOL_2_OUTPUT_WH;col++){
 					#pragma HLS pipeline
-					
+
 					float max1, max2, max;
 					float a00, a01, a10, a11;
 					int rr = row<<1;
 					int cc = col<<1;
-					a00 = OutputBuffer[batch][depth][rr][cc];
-					a01 = OutputBuffer[batch][depth][rr][cc+1];
-					a10 = OutputBuffer[batch][depth][rr+1][cc];
-					a11 = OutputBuffer[batch][depth][rr+1][cc+1];
+					a00 = OutputBuffer[batch][depth][rr*10+cc];
+					a01 = OutputBuffer[batch][depth][rr*10+cc+1];
+					a10 = OutputBuffer[batch][depth][(rr+1)*10+cc];
+					a11 = OutputBuffer[batch][depth][(rr+1)*10+cc+1];
 					max1 = a00 > a01 ? a00 : a01;
 					max2 = a10 > a11 ? a10 : a11;
 					max  = max1 > max2 ? max1 : max2;
-					
+
 					/*
 					for(int row_w=0;row_w<2;row_w++){
 						for(int col_w=0;col_w<2;col_w++){

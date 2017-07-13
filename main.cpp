@@ -61,24 +61,12 @@ int main(void){
 	float* bconv2=(float*)sds_alloc(CONV_2_TYPE*sizeof(float));
 	float* Wconv3=(float*)sds_alloc(CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE*sizeof(float));
 	float* bconv3=(float*)sds_alloc(CONV_3_TYPE*sizeof(float));
-	//float* Wconv3_1 = (float*) sds_alloc(16*120*25/2*sizeof(float));
-	//float* Wconv3_2 = (float*) sds_alloc(16*120*25/2*sizeof(float));
+	
 	if(!Wconv1||!Wconv2||!Wconv3||!bconv1||!bconv2||!bconv3){
 		cout<<"mem alloc error(1)"<<endl;
 		return 1;
 	}
-	/*
-	float* weights = (float*) sds_alloc( conv_weight_size * sizeof(float));
-	float* Wconv1 = weights;
-	float* bconv1 = weights + CONV_1_TYPE*CONV_1_SIZE;
-	float* Wconv2 = bconv1 + CONV_1_TYPE;
-	float* bconv2 = Wconv2 + CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE;
-	float* Wconv3 = bconv2 + CONV_2_TYPE;
-	float* bconv3 = Wconv3 + CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE;*/
-	//float Wpool1[POOL_1_TYPE*4];
-	//float bpool1[POOL_1_TYPE];
-	//float Wpool2[POOL_2_TYPE*4];
-	//float bpool2[POOL_2_TYPE];
+	
 
 	float Wfc1[FILTER_NN_1_SIZE];
 	float bfc1[BIAS_NN_1_SIZE];
@@ -141,6 +129,9 @@ int main(void){
 	for(int i=0;i<test_num;i++){
 		for(int batch=0;batch<image_Batch*INPUT_WH*INPUT_WH;batch++)
 			input_layer[batch] = MNIST_IMG[i*MNIST_PAD_SIZE + batch];
+		
+		
+		
 	/*	for(int i=0;i<32;i++){
 			for(int j=0;j<32;j++){
 				printf("%1.1f ",input_layer[i*32+j]);
@@ -152,7 +143,7 @@ int main(void){
 
 		// C1 start
 		hw_ctr_conv1.start(); // counter for C1 layer
-		conv_top(input_layer,Wconv1,bconv1,Wconv2,bconv2,Wconv3,bconv3,hconv3);
+		conv_top(input_layer,Wconv1,bconv1,Wconv2,bconv2,Wconv3,bconv3,hconv3,i);
 		//CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1,6*25,6);
 		//CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,pool1);
 		//hw_ctr_conv1.stop();

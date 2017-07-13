@@ -55,9 +55,9 @@ void conv_top(float input[32*32],float Wconv1[6*25], float bconv1[6],
 	copy_input(input, IBRAM);
 	CONVOLUTION_LAYER_1(IBRAM,W1BRAM,b1BRAM,pool1);
 	CONVOLUTION_LAYER_2(pool1,W2BRAM,b2BRAM,pool2);
-	CONVOLUTION_LAYER_3(pool2,W3BRAM,b3BRAM,OBRAM);
+	CONVOLUTION_LAYER_3(pool2,W3BRAM,OBRAM);
 	// store output
-	store_output(OBRAM, output);
+	store_output(OBRAM, b3BRAM, output);
 	
 }
 
@@ -67,6 +67,8 @@ void CONVOLUTION_LAYER_1(float input[1][32][32],
 		float output_feature[1][6][14][14]
 		)
 {
+	float output[image_Batch][CONV_1_TYPE][CONV_1_OUTPUT_SIZE];
+	#pragma HLS array_partition variable=output complete dim=2
 	/*float input[image_Batch][INPUT_WH][INPUT_WH];
 	float kernel[CONV_1_TYPE][5][5];
 	float bias[CONV_1_TYPE];
@@ -180,7 +182,7 @@ void CONVOLUTION_LAYER_1(float input[1][32][32],
 }
 
 void CONVOLUTION_LAYER_2(float input[1][6][14][14],
-		float kernel[6][16][5][5]
+		float kernel[6][16][5][5],
 		float bias[CONV_2_TYPE],
 		float output_feature[1][16][5][5]
 		)
@@ -189,6 +191,9 @@ void CONVOLUTION_LAYER_2(float input[1][6][14][14],
 
 
 	static const int C2_N_PE = 2;
+	float output[image_Batch][CONV_2_TYPE][CONV_2_OUTPUT_SIZE];
+#pragma HLS array_partition variable=output cyclic factor=C2_N_PE dim=2
+/*
 	float input[image_Batch][CONV_1_TYPE][CONV_2_INPUT_WH][CONV_2_INPUT_WH];
 	float kernel[CONV_1_TYPE][CONV_2_TYPE][CONV_2_WH][CONV_2_WH];
 	float bias[CONV_2_TYPE];
@@ -244,7 +249,7 @@ void CONVOLUTION_LAYER_2(float input[1][6][14][14],
 #pragma HLS pipeline II=1
 		bias[i] = conv_bias[i];
 	}
-
+*/
 	//////////////////////////////////////////////////////////////////////
 	//						   Convolution								//
 	//////////////////////////////////////////////////////////////////////
@@ -341,11 +346,12 @@ void CONVOLUTION_LAYER_2(float input[1][6][14][14],
 // Function by Batch_size(10)
 // Input_feature_map[16][5x5],  Conv_kernel[120][16][5x5], Bias[120], Output_feature_map[120][1x1]
 void CONVOLUTION_LAYER_3(float input[1][16][5][5],
-		float kernel[16][120][5][5]
-		float bias[CONV_3_TYPE],
-		float output_feature[1][120]
+		float kernel[16][120][5][5],
+		//float bias[CONV_3_TYPE],
+		float output[1][120]
 		)
 {
+	//float output[image_Batch][CONV_3_TYPE];
 	/*
 	float input[image_Batch][CONV_2_TYPE][CONV_3_INPUT_WH][CONV_3_INPUT_WH];
 	float kernel[CONV_2_TYPE][120][CONV_3_WH][CONV_3_WH];
@@ -432,7 +438,7 @@ void CONVOLUTION_LAYER_3(float input[1][16][5][5],
 
 
 
-void copy_input(float* DRAM, float* buffer){
+void copy_input(float* DRAM, float buffer[1][32][32]){
 	copy_input_1:
 	for(int batch_cnt=0;batch_cnt<image_Batch;batch_cnt++){
 		copy_input_2 :
@@ -497,18 +503,18 @@ void copy_weights(float Wconv1[6*25], float bconv1[6],
 	#pragma HLS pipeline
 		b2BRAM[i] = bconv2[i];
 	}
-	for(itn i=0;i<120;i++){
+	for(int i=0;i<120;i++){
 	#pragma HLS pipeline
 		b3BRAM[i] = bconv3[i];
 	}
 	
 }
 
-void store_output(float buffer[1][120], float* DRAM){
+void store_output(float buffer[1][120], float* b3BRAM, float* DRAM){
 	for(int i=0;i<image_Batch;i++){
 		for(int j=0;j<120;j++){
 		#pragma HLS pipeline
-			DRAM[i*120 + j] = _tanh(OBRAM[i*120+j]+b3BRAM[j]);
+			DRAM[i*120 + j] = _tanh(buffer[i][j]+b3BRAM[j]);
 		}
 	}
 }

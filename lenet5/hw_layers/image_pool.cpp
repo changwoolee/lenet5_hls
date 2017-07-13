@@ -7,7 +7,7 @@
 
 
 #include <lenet5/hw_layers/image_pool.h>
-
+/*
 void MAXPOOL_1(float OutputBuffer[image_Batch][6][28*28], float dst[image_Batch*6*14*14]){
 	#pragma HLS INLINE
 	for(int batch=0;batch<image_Batch;batch++){
@@ -36,7 +36,7 @@ void MAXPOOL_1(float OutputBuffer[image_Batch][6][28*28], float dst[image_Batch*
 											(2*row+row_w)*POOL_1_INPUT_WH + col*2+col_w];
 							}
 						}
-					}*/
+					}
 					dst[batch*POOL_1_TYPE*POOL_1_OUTPUT_SIZE + depth*POOL_1_OUTPUT_SIZE + row*POOL_1_OUTPUT_WH + col] = _tanh(max);
 				}
 			}
@@ -72,7 +72,7 @@ void MAXPOOL_2(float OutputBuffer[image_Batch][16][10*10], float dst[image_Batch
 											(2*row+row_w)*POOL_1_INPUT_WH + col*2+col_w];
 							}
 						}
-					}*/
+					}
 					dst[batch*POOL_2_TYPE*POOL_2_OUTPUT_SIZE + depth*POOL_2_OUTPUT_SIZE + row*POOL_2_OUTPUT_WH + col] = _tanh(max);
 					/*float max=-FLT_MAX;
 					for(int row_w=0;row_w<2;row_w++){
@@ -84,9 +84,10 @@ void MAXPOOL_2(float OutputBuffer[image_Batch][16][10*10], float dst[image_Batch
 							}
 						}
 					}
-					dst[batch*POOL_2_TYPE*POOL_2_OUTPUT_SIZE + depth*POOL_2_OUTPUT_SIZE + row*POOL_2_OUTPUT_WH + col] = max;*/
+					dst[batch*POOL_2_TYPE*POOL_2_OUTPUT_SIZE + depth*POOL_2_OUTPUT_SIZE + row*POOL_2_OUTPUT_WH + col] = max;
 				}
 			}
 		}
 	}
 }
+*/

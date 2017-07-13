@@ -130,8 +130,8 @@ int main(void){
 	double accuracy_hw, accuracy_sw;
 
 	// cycle counters
-	perf_counter hw_ctr_tot, hw_ctr_conv1, hw_ctr_conv2, hw_ctr_conv3, hw_ctr_pool1, hw_ctr_pool2, hw_ctr_fc1, hw_ctr_fc2;
-	perf_counter sw_ctr_tot, sw_ctr_conv1, sw_ctr_conv2, sw_ctr_conv3, sw_ctr_pool1, sw_ctr_pool2, sw_ctr_fc1, sw_ctr_fc2;
+	perf_counter hw_ctr_tot, hw_ctr_conv1, hw_ctr_conv2, hw_ctr_conv3, hw_ctr_fc1, hw_ctr_fc2;//hw_ctr_pool1, hw_ctr_pool2,
+	perf_counter sw_ctr_tot, sw_ctr_conv1, sw_ctr_conv2, sw_ctr_conv3, sw_ctr_fc1, sw_ctr_fc2;//sw_ctr_pool1, sw_ctr_pool2,
 
 	// test number
 	int test_num = image_Move/image_Batch;
@@ -152,9 +152,10 @@ int main(void){
 
 		// C1 start
 		hw_ctr_conv1.start(); // counter for C1 layer
+		conv_top(input_layer,Wconv1,bconv1,Wconv2,bconv2,Wconv3,bconv3,hconv3);
 		//CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1,6*25,6);
-		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,pool1);
-		hw_ctr_conv1.stop();
+		//CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,pool1);
+		//hw_ctr_conv1.stop();
 	/*	for(int i=0;i<6;i++){
 			for(int j=0;j<28;j++){
 				for(int k=0;k<28;k++){
@@ -166,10 +167,10 @@ int main(void){
 		}
 */
 		// S1 start
-		hw_ctr_pool1.start();
+		//hw_ctr_pool1.start();
 		//POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
 		//MAXPOOL_1_SW(hconv1,pool1);
-		hw_ctr_pool1.stop();
+		//hw_ctr_pool1.stop();
 	/*	for(int i=0;i<6;i++){
 			for(int j=0;j<14;j++){
 				for(int k=0;k<14;k++){
@@ -184,10 +185,10 @@ int main(void){
 			cout<<"\n";
 		}*/
 		//C2 start
-		hw_ctr_conv2.start();
+		//hw_ctr_conv2.start();
 		//CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2,6*16*25,16);
-		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,pool2);
-		hw_ctr_conv2.stop();
+		//CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,pool2);
+		//hw_ctr_conv2.stop();
 	/*	for(int i=0;i<16;i++){
 					for(int j=0;j<10;j++){
 						for(int k=0;k<10;k++){
@@ -197,10 +198,10 @@ int main(void){
 					}
 					cout<<"\n";
 				}*/
-		hw_ctr_pool2.start();
+		//hw_ctr_pool2.start();
 		//POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
 		//MAXPOOL_2_SW(hconv2,pool2);
-		hw_ctr_pool2.stop();
+		//hw_ctr_pool2.stop();
 	/*	for(int i=0;i<16;i++){
 					for(int j=0;j<5;j++){
 						for(int k=0;k<5;k++){
@@ -210,11 +211,12 @@ int main(void){
 					}
 					cout<<"\n";
 				}*/
-		hw_ctr_conv3.start();
+		//hw_ctr_conv3.start();
 		//CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3,16*120*25,120);
-		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3);
+		//CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3);
 
-		hw_ctr_conv3.stop();
+		//hw_ctr_conv3.stop();
+		hw_ctr_conv1.stop();
 /*		for(int i=0;i<120;i++){
 			printf("%1.1f ",hconv3[i]);
 		}
@@ -254,27 +256,28 @@ int main(void){
 		// C1 start
 		sw_ctr_conv1.start(); // counter for C1 layer
 		CONVOLUTION_LAYER_1_SW(input_layer,Wconv1,bconv1,hconv1);
-		sw_ctr_conv1.stop();
+		//sw_ctr_conv1.stop();
 
 		// S1 start
-		sw_ctr_pool1.start();
+		//sw_ctr_pool1.start();
 		//POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
 		MAXPOOL_1_SW(hconv1,pool1);
-		sw_ctr_pool1.stop();
-
+		//sw_ctr_pool1.stop();
+		//sw_ctr_conv1.stop();
 		//C2 start
-		sw_ctr_conv2.start();
+		//sw_ctr_conv2.start();
 		CONVOLUTION_LAYER_2_SW(pool1,Wconv2,bconv2,hconv2);
-		sw_ctr_conv2.stop();
+		//sw_ctr_conv2.stop();
 
-		sw_ctr_pool2.start();
+		//sw_ctr_pool2.start();
 		//POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
 		MAXPOOL_2_SW(hconv2,pool2);
-		sw_ctr_pool2.stop();
-
-		sw_ctr_conv3.start();
+		//sw_ctr_pool2.stop();
+		//sw_ctr_conv2.stop();
+		//sw_ctr_conv3.start();
 		CONVOLUTION_LAYER_3_SW(pool2,Wconv3,bconv3,hconv3);
-		sw_ctr_conv3.stop();
+		//sw_ctr_conv3.stop();
+		sw_ctr_conv1.stop();
 
 
 		sw_ctr_fc1.start();
@@ -313,15 +316,17 @@ int main(void){
 	
 #ifndef HW_TEST
 	stringstream ss;
+	ss <<"HW accuracy : "<<accuracy_hw<<endl;
+	ss <<"SW accuracy : "<<accuracy_sw<<endl;
 	ss <<"----------------------------------------------------------------------------"<<endl;
 	double speedup_c1 = (double) sw_ctr_conv1.avg_cpu_cycles() / (double) hw_ctr_conv1.avg_cpu_cycles();
-	ss <<"Average number of CPU cycles running C1 in software: "
+	ss <<"Average number of CPU cycles running C1 to C3 in software: "
 		 <<sw_ctr_conv1.avg_cpu_cycles()<<endl;
-	ss <<"Average number of CPU cycles running C1 in hardware: "
+	ss <<"Average number of CPU cycles running C1 to C3 in hardware: "
 		 <<hw_ctr_conv1.avg_cpu_cycles()<<endl;
 	ss <<"Speed up: "<<speedup_c1<<endl;
 	ss <<"----------------------------------------------------------------------------"<<endl;
-	double speedup_s1 = (double) sw_ctr_pool1.avg_cpu_cycles() / (double) hw_ctr_pool1.avg_cpu_cycles();
+	/*double speedup_s1 = (double) sw_ctr_pool1.avg_cpu_cycles() / (double) hw_ctr_pool1.avg_cpu_cycles();
 	ss <<"Average number of CPU cycles running S1 in software: "
 		 <<sw_ctr_pool1.avg_cpu_cycles()<<endl;
 	ss <<"Average number of CPU cycles running S1 in hardware: "
@@ -335,7 +340,7 @@ int main(void){
 		 <<hw_ctr_conv2.avg_cpu_cycles()<<endl;
 	ss <<"Speed up: "<<speedup_c2<<endl;
 	ss <<"----------------------------------------------------------------------------"<<endl;
-	double speedup_s2 = (double) sw_ctr_pool2.avg_cpu_cycles() / (double) hw_ctr_pool2.avg_cpu_cycles();
+	/*double speedup_s2 = (double) sw_ctr_pool2.avg_cpu_cycles() / (double) hw_ctr_pool2.avg_cpu_cycles();
 	ss <<"Average number of CPU cycles running S2 in software: "
 		 <<sw_ctr_pool2.avg_cpu_cycles()<<endl;
 	ss <<"Average number of CPU cycles running S2 in hardware: "
@@ -348,6 +353,16 @@ int main(void){
 	ss <<"Average number of CPU cycles running C3 in hardware: "
 		 <<hw_ctr_conv3.avg_cpu_cycles()<<endl;
 	ss <<"Speed up: "<<speedup_c3<<endl;
+	ss <<"----------------------------------------------------------------------------"<<endl;*/
+	ss <<"Average number of CPU cycles running FC1 in software: "
+			<<sw_ctr_fc1.avg_cpu_cycles()<<endl;
+	ss <<"Average number of CPU cycles running FC1 in hardware: "
+			<<hw_ctr_fc1.avg_cpu_cycles()<<endl;
+	ss <<"----------------------------------------------------------------------------"<<endl;
+	ss <<"Average number of CPU cycles running FC2 in software: "
+			<<sw_ctr_fc2.avg_cpu_cycles()<<endl;
+	ss <<"Average number of CPU cycles running FC2 in hardware: "
+			<<hw_ctr_fc2.avg_cpu_cycles()<<endl;
 	ss <<"----------------------------------------------------------------------------"<<endl;
 	double speedup_tot = (double) sw_ctr_tot.avg_cpu_cycles() / (double) hw_ctr_tot.avg_cpu_cycles();
 	ss <<"Average number of CPU cycles running total model in software: "

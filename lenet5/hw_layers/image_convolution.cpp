@@ -1,6 +1,33 @@
 #include <lenet5/hw_layers/image_convolution.h>
 //#include "hls_math.h"
 
+float _tanh(float x){
+#pragma HLS INLINE
+//#pragma HLS pipeline
+	float exp2x = expf(2*x)+1;
+	return (exp2x-2)/(exp2x);
+}
+
+float relu(float x){
+#pragma HLS inline
+	return x>0 ? x : 0;
+}
+
+
+void conv_top(float input[32*32],float Wconv1[6*25], float bconv1[6],
+			float Wconv2[6*16*25], float bconv2[16],
+			float Wconv3[16*120*25], float bconv3[120],
+			float output[120]){
+//#pragma HLS DATAFLOW
+	float pool1[6*14*14];
+	float pool2[16*5*5];
+
+	CONVOLUTION_LAYER_1(input,Wconv1,bconv1,pool1);
+	CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,pool2);
+	CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,output);
+
+}
+
 void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 		float conv_kernel[CONV_1_TYPE*25],
 		float conv_bias[CONV_1_TYPE],
@@ -87,7 +114,38 @@ void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 
 	}
 	
-	MAXPOOL_1(output,output_feature);
+	for(int batch=0;batch<image_Batch;batch++){
+			for(int depth=0;depth<POOL_1_TYPE;depth++){
+				for(int row=0;row<POOL_1_OUTPUT_WH;row++){
+					for(int col=0;col<POOL_1_OUTPUT_WH;col++){
+						#pragma HLS pipeline
+						float max1, max2, max;
+						float a00, a01, a10, a11;
+						int rr = row<<1;
+						int cc = col<<1;
+						a00 = output[batch][depth][rr*28+cc];
+						a01 = output[batch][depth][rr*28+cc+1];
+						a10 = output[batch][depth][(rr+1)*28+cc];
+						a11 = output[batch][depth][(rr+1)*28+cc+1];
+						max1 = a00 > a01 ? a00 : a01;
+						max2 = a10 > a11 ? a10 : a11;
+						max  = max1 > max2 ? max1 : max2;
+
+						/*
+						for(int row_w=0;row_w<2;row_w++){
+							for(int col_w=0;col_w<2;col_w++){
+								if(src[batch*POOL_1_TYPE*POOL_1_INPUT_SIZE + depth*POOL_1_INPUT_SIZE +
+									(2*row+row_w)*POOL_1_INPUT_WH + col*2+col_w]>max){
+									max = src[batch*POOL_1_TYPE*POOL_1_INPUT_SIZE + depth*POOL_1_INPUT_SIZE +
+												(2*row+row_w)*POOL_1_INPUT_WH + col*2+col_w];
+								}
+							}
+						}*/
+						output_feature[batch*POOL_1_TYPE*POOL_1_OUTPUT_SIZE + depth*POOL_1_OUTPUT_SIZE + row*POOL_1_OUTPUT_WH + col] = _tanh(max);
+					}
+				}
+			}
+		}
 
 	
 }
@@ -95,7 +153,7 @@ void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_INPUT_WH *CONV_2_INPUT_WH],
 		float conv_kernel[CONV_2_TYPE*CONV_1_TYPE*CONV_2_WH * CONV_2_WH],
 		float conv_bias[CONV_2_TYPE],
-		float output_feature[CONV_2_TYPE * image_Batch*CONV_2_OUTPUT_WH * CONV_2_OUTPUT_WH]
+		float output_feature[CONV_2_TYPE * image_Batch*CONV_2_OUTPUT_WH * CONV_2_OUTPUT_WH/4]
 		)
 
 {
@@ -234,7 +292,50 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 		}
 
 	}
-	MAXPOOL_2(output,output_feature);
+	for(int batch=0;batch<image_Batch;batch++){
+			for(int depth=0;depth<POOL_2_TYPE;depth++){
+				for(int row=0;row<POOL_2_OUTPUT_WH;row++){
+					for(int col=0;col<POOL_2_OUTPUT_WH;col++){
+						#pragma HLS pipeline
+
+						float max1, max2, max;
+						float a00, a01, a10, a11;
+						int rr = row<<1;
+						int cc = col<<1;
+						a00 = output[batch][depth][rr*10+cc];
+						a01 = output[batch][depth][rr*10+cc+1];
+						a10 = output[batch][depth][(rr+1)*10+cc];
+						a11 = output[batch][depth][(rr+1)*10+cc+1];
+						max1 = a00 > a01 ? a00 : a01;
+						max2 = a10 > a11 ? a10 : a11;
+						max  = max1 > max2 ? max1 : max2;
+
+						/*
+						for(int row_w=0;row_w<2;row_w++){
+							for(int col_w=0;col_w<2;col_w++){
+								if(src[batch*POOL_1_TYPE*POOL_1_INPUT_SIZE + depth*POOL_1_INPUT_SIZE +
+									(2*row+row_w)*POOL_1_INPUT_WH + col*2+col_w]>max){
+									max = src[batch*POOL_1_TYPE*POOL_1_INPUT_SIZE + depth*POOL_1_INPUT_SIZE +
+												(2*row+row_w)*POOL_1_INPUT_WH + col*2+col_w];
+								}
+							}
+						}*/
+						output_feature[batch*POOL_2_TYPE*POOL_2_OUTPUT_SIZE + depth*POOL_2_OUTPUT_SIZE + row*POOL_2_OUTPUT_WH + col] = _tanh(max);
+						/*float max=-FLT_MAX;
+						for(int row_w=0;row_w<2;row_w++){
+							for(int col_w=0;col_w<2;col_w++){
+								if(src[batch*POOL_2_TYPE*POOL_2_INPUT_SIZE + depth*POOL_2_INPUT_SIZE +
+									(2*row+row_w)*POOL_2_INPUT_WH + col*2+col_w]>max){
+									max = src[batch*POOL_2_TYPE*POOL_2_INPUT_SIZE + depth*POOL_2_INPUT_SIZE +
+												(2*row+row_w)*POOL_2_INPUT_WH + col*2+col_w];
+								}
+							}
+						}
+						dst[batch*POOL_2_TYPE*POOL_2_OUTPUT_SIZE + depth*POOL_2_OUTPUT_SIZE + row*POOL_2_OUTPUT_WH + col] = max;*/
+					}
+				}
+			}
+		}
 
 }
 

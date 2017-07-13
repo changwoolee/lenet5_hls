@@ -9,8 +9,8 @@
 #define SRC_LENET5_HW_LAYERS_IMAGE_POOL_H_
 
 #include "activation.h"
-void MAXPOOL_1(float OutputBuffer[image_Batch][6][28*28], float dst[image_Batch*6*14*14]);
-void MAXPOOL_2(float OutputBuffer[image_Batch][16][10*10], float dst[image_Batch*16*5*5]);
+//void MAXPOOL_1(float OutputBuffer[image_Batch][6][28*28], float dst[image_Batch*6*14*14]);
+//void MAXPOOL_2(float OutputBuffer[image_Batch][16][10*10], float dst[image_Batch*16*5*5]);
 /*void POOLING_LAYER_1(float src[POOL_1_TYPE * image_Batch*POOL_1_INPUT_WH * POOL_1_INPUT_WH],
 					float pool_kernel[POOL_1_TYPE*POOL_1_SIZE],
 					float pool_bias[POOL_1_TYPE],

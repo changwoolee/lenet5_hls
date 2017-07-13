@@ -1,11 +1,18 @@
+
+//#include <lenet5/hw_layers/image_pool.h>
 #include "../common.h"
-#include "activation.h"
-#include <lenet5/hw_layers/image_pool.h>
 #define CONV_2_SIZE 25
 
+float _tanh(float x);
+float relu(float x);
 
+#pragma SDS data access_pattern(input:SEQUENTIAL, Wconv1:SEQUENTIAL, bconv1:SEQUENTIAL, Wconv2:SEQUENTIAL, bconv2:SEQUENTIAL, Wconv3:SEQUENTIAL, bconv3:SEQUENTIAL, output:SEQUENTIAL)
+void conv_top(float input[32*32],float Wconv1[6*25], float bconv1[6],
+			float Wconv2[6*16*25], float bconv2[16],
+			float Wconv3[16*120*25], float bconv3[120],
+			float output[120]);
 
-#pragma SDS data access_pattern(input_feature:SEQUENTIAL,conv_kernel:SEQUENTIAL,conv_bias:SEQUENTIAL,output_feature:SEQUENTIAL)
+//#pragma SDS data access_pattern(input_feature:SEQUENTIAL,conv_kernel:SEQUENTIAL,conv_bias:SEQUENTIAL,output_feature:SEQUENTIAL)
 //#pragma SDS data zero_copy(input_feature,conv_kernel,conv_bias,output_feature)
 void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 		float conv_kernel[CONV_1_TYPE*25],
@@ -13,7 +20,7 @@ void CONVOLUTION_LAYER_1(float input_feature[image_Batch*INPUT_WH *INPUT_WH],
 		float output_feature[image_Batch*CONV_1_TYPE*CONV_1_OUTPUT_SIZE/4]
 		);
 
-#pragma SDS data access_pattern(input_feature:SEQUENTIAL,conv_kernel:SEQUENTIAL,conv_bias:SEQUENTIAL,output_feature:SEQUENTIAL)
+//#pragma SDS data access_pattern(input_feature:SEQUENTIAL,conv_kernel:SEQUENTIAL,conv_bias:SEQUENTIAL,output_feature:SEQUENTIAL)
 //#pragma SDS data zero_copy(input_feature,conv_kernel,conv_bias,output_feature)
 //#pragma SDS data copy(conv_kernel[0:kernel_size],conv_bias[0:bias_size])
 void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_INPUT_WH *CONV_2_INPUT_WH],
@@ -22,7 +29,7 @@ void CONVOLUTION_LAYER_2(float input_feature[CONV_1_TYPE * image_Batch*CONV_2_IN
 	float output_feature[CONV_2_TYPE * image_Batch*CONV_2_OUTPUT_WH * CONV_2_OUTPUT_WH/4]
 	);
 
-#pragma SDS data access_pattern(input_feature:SEQUENTIAL,conv_kernel:SEQUENTIAL,conv_bias:SEQUENTIAL,output_feature:SEQUENTIAL)
+//#pragma SDS data access_pattern(input_feature:SEQUENTIAL,conv_kernel:SEQUENTIAL,conv_bias:SEQUENTIAL,output_feature:SEQUENTIAL)
 //#pragma SDS data zero_copy(input_feature,conv_kernel,conv_bias,output_feature)
 //#pragma SDS data copy(conv_kernel[0:kernel_size],conv_bias[0:bias_size])
 void CONVOLUTION_LAYER_3(float input_feature[CONV_2_TYPE*image_Batch*CONV_3_INPUT_WH *CONV_3_INPUT_WH],

@@ -1,6 +1,6 @@
-#include <lenet5/hw_layers/activation.h>
+#include "activation.h"
 
-
+/*
 float _tanh(float x){
 #pragma HLS INLINE
 //#pragma HLS pipeline
@@ -12,3 +12,4 @@ float relu(float x){
 #pragma HLS inline
 	return x>0 ? x : 0;
 }
+*/

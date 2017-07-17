@@ -10,23 +10,27 @@
 
 void FULLY_CONNECTED_LAYER_1_SW(float* input_feature, float* weights, float* bias, float* output_feature){
 	for (int batch = 0; batch < image_Batch; batch++) {
-			for (int j = 0; j < OUTPUT_NN_1_SIZE; j++) {
+			for (int i = 0; i < OUTPUT_NN_1_SIZE; i++) {
 				float temp = 0;
-				for (int i = 0; i < INPUT_NN_1_SIZE; i++) {
-					temp += input_feature[batch*120 + i] * weights[i*84 + j];
+				for (int j = 0; j < INPUT_NN_1_SIZE; j++) {
+					float in_val = input_feature[j];
+					float w_val = weights[j*84+i];
+					temp += in_val*w_val;
 				}
-				output_feature[batch*84 + j] = tanhf(temp + bias[j]);
+				output_feature[batch*84 + i] = tanhf(temp + bias[i]);
 			}
 		}
 }
 void FULLY_CONNECTED_LAYER_2_SW(float* input_feature, float* weights, float* bias, float* output_feature){
 	for (int batch = 0; batch < image_Batch; batch++) {
-		for (int j = 0; j < OUTPUT_NN_2_SIZE; j++) {
+		for (int i = 0; i < OUTPUT_NN_2_SIZE; i++) {
 			float temp = 0;
-			for (int i = 0; i < INPUT_NN_2_SIZE; i++) {
-				temp += input_feature[batch*84 + i] * weights[i*10 + j];
+			for (int j = 0; j < INPUT_NN_2_SIZE; j++) {
+				float in_val = input_feature[j];
+				float w_val = weights[j*10+i];
+				temp += in_val*w_val;//input_feature[batch*84 + j] * weights[j*10 + i];
 			}
-			output_feature[batch*10 + j] = tanhf(temp + bias[j]);
+			output_feature[batch*10 + i] = tanhf(temp + bias[i]);
 		}
 	}
 }

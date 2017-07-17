@@ -2,7 +2,7 @@
 #define SRC_MNIST_DATA_H_
 #include <iostream>
 #include <fstream>
-
+#include "../lenet5/common.h"
 #define TRUE 1
 #define FALSE 0
 
@@ -23,7 +23,7 @@ int ReverseInt(int i) {
 
 
 // Read MNIST Data to padded array
-void READ_MNIST_DATA(string filename, float* arr, int image_num=image_Move) {
+void READ_MNIST_DATA(string filename, float* arr, float scale_min, float scale_max, int image_num=image_Move) {
 	ifstream file(filename.c_str(), ios::binary);
 	cout << "Read MNIST DATA..."<< endl;
 	if (file.is_open())
@@ -44,15 +44,23 @@ void READ_MNIST_DATA(string filename, float* arr, int image_num=image_Move) {
 		int batch = number_of_images > image_num ? image_num : number_of_images;
 		for (int i = 0; i<batch; ++i)
 		{
-			for (int r = 0; r<n_rows; ++r)
+			//for (int r = 0; r<n_rows; ++r)
+			for (int r = 0; r<32; ++r)
 			{
-				for (int c = 0; c<n_cols; ++c)
+				//for (int c = 0; c<n_cols; ++c)
+				for(int c=0;c<32;++c)
 				{
-					unsigned char temp = 0;
-					file.read((char*)&temp, sizeof(temp));
-					float _temp = ((float)temp) / 255;
-					
-					arr[i*(n_rows+4)*(n_cols+4) + r*(n_rows+4) + c+2] = _temp;
+
+					float _temp;
+					if(c<2 || r<2 || c>=30|| r>=30)
+						_temp = scale_min;
+					else{
+						unsigned char temp = 0;
+						file.read((char*)&temp, sizeof(temp));
+						_temp = ((float)temp / 255.0 )*(scale_max - scale_min) + scale_min;
+					}
+
+					arr[i*1024 + r*32 + c] = _temp;
 				}
 			}
 		}

@@ -22,15 +22,16 @@ void POOLING_LAYER_1_SW(float* src, float* pool_kernel, float* pool_bias, float*
 				for (col = 0; col < POOL_1_OUTPUT_WH; col++)
 				{
 					// Computation of Pooling
-					value = src[(depth + POOL_1_TYPE * batch_cnt)*POOL_1_INPUT_SIZE + (row * 2) * POOL_1_INPUT_WH + (col * 2)] * pool_kernel[depth*POOL_1_SIZE+0]
-						+ src[(depth + POOL_1_TYPE * batch_cnt)*POOL_1_INPUT_SIZE + (row * 2) * POOL_1_INPUT_WH + (col * 2 + 1)] * pool_kernel[depth*POOL_1_SIZE+1]
-						+ src[(depth + POOL_1_TYPE * batch_cnt)*POOL_1_INPUT_SIZE + (row * 2 + 1) * POOL_1_INPUT_WH + (col * 2)] * pool_kernel[depth*POOL_1_SIZE+2]
-						+ src[(depth + POOL_1_TYPE * batch_cnt)*POOL_1_INPUT_SIZE + (row * 2 + 1) * POOL_1_INPUT_WH + (col * 2 + 1)] * pool_kernel[depth*POOL_1_SIZE+3];
+					value = src[(depth + POOL_1_TYPE * batch_cnt)*POOL_1_INPUT_SIZE + (row * 2) * POOL_1_INPUT_WH + (col * 2)]// * pool_kernel[depth*POOL_1_SIZE+0]
+						+ src[(depth + POOL_1_TYPE * batch_cnt)*POOL_1_INPUT_SIZE + (row * 2) * POOL_1_INPUT_WH + (col * 2 + 1)]// * pool_kernel[depth*POOL_1_SIZE+1]
+						+ src[(depth + POOL_1_TYPE * batch_cnt)*POOL_1_INPUT_SIZE + (row * 2 + 1) * POOL_1_INPUT_WH + (col * 2)]// * pool_kernel[depth*POOL_1_SIZE+2]
+						+ src[(depth + POOL_1_TYPE * batch_cnt)*POOL_1_INPUT_SIZE + (row * 2 + 1) * POOL_1_INPUT_WH + (col * 2 + 1)];// * pool_kernel[depth*POOL_1_SIZE+3];
 
-					value *= 2.7;
-
+					float weight = pool_kernel[depth]*0.25;
+					value *= weight;
+					value += pool_bias[depth];
 					// Activation function
-					dst[(batch_cnt * POOL_1_TYPE + depth)*POOL_1_OUTPUT_SIZE + row * POOL_1_OUTPUT_WH + col] = (value + pool_bias[depth]);
+					dst[(batch_cnt * POOL_1_TYPE + depth)*POOL_1_OUTPUT_SIZE + row * POOL_1_OUTPUT_WH + col] = tanhf(value);
 				}
 			}
 		}
@@ -50,15 +51,16 @@ void POOLING_LAYER_2_SW(float* src, float* pool_kernel, float* pool_bias, float*
 				for (col = 0; col < POOL_2_OUTPUT_WH; col++)
 				{
 					// Computation of Pooling
-					value = src[(depth + POOL_2_TYPE * batch_cnt)*POOL_2_INPUT_SIZE + (row * 2) * POOL_2_INPUT_WH + (col * 2)] * pool_kernel[depth*POOL_2_SIZE+0]
-						+ src[(depth + POOL_2_TYPE * batch_cnt)*POOL_2_INPUT_SIZE + (row * 2) * POOL_2_INPUT_WH + (col * 2 + 1)] * pool_kernel[depth*POOL_2_SIZE+1]
-						+ src[(depth + POOL_2_TYPE * batch_cnt)*POOL_2_INPUT_SIZE + (row * 2 + 1) * POOL_2_INPUT_WH + (col * 2)] * pool_kernel[depth*POOL_2_SIZE+2]
-						+ src[(depth + POOL_2_TYPE * batch_cnt)*POOL_2_INPUT_SIZE + (row * 2 + 1) * POOL_2_INPUT_WH + (col * 2 + 1)] * pool_kernel[depth*POOL_2_SIZE+3];
+					value = src[(depth + POOL_2_TYPE * batch_cnt)*POOL_2_INPUT_SIZE + (row * 2) * POOL_2_INPUT_WH + (col * 2)]// * pool_kernel[depth*POOL_2_SIZE+0]
+						+ src[(depth + POOL_2_TYPE * batch_cnt)*POOL_2_INPUT_SIZE + (row * 2) * POOL_2_INPUT_WH + (col * 2 + 1)]// * pool_kernel[depth*POOL_2_SIZE+1]
+						+ src[(depth + POOL_2_TYPE * batch_cnt)*POOL_2_INPUT_SIZE + (row * 2 + 1) * POOL_2_INPUT_WH + (col * 2)]// * pool_kernel[depth*POOL_2_SIZE+2]
+						+ src[(depth + POOL_2_TYPE * batch_cnt)*POOL_2_INPUT_SIZE + (row * 2 + 1) * POOL_2_INPUT_WH + (col * 2 + 1)];// * pool_kernel[depth*POOL_2_SIZE+3];
 
-					value *= 2.7;
+					float weight = pool_kernel[depth]*0.25;
+					value *= weight;
 
 					// Activation function
-					dst[(batch_cnt * POOL_2_TYPE + depth)*POOL_2_OUTPUT_SIZE + row * POOL_2_OUTPUT_WH + col] = (value + pool_bias[depth]);
+					dst[(batch_cnt * POOL_2_TYPE + depth)*POOL_2_OUTPUT_SIZE + row * POOL_2_OUTPUT_WH + col] = tanhf(value + pool_bias[depth]);
 				}
 			}
 		}

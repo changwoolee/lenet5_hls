@@ -84,7 +84,7 @@ void CONVOLUTION_LAYER_1(float input[image_Batch*32*32],
 #pragma HLS DEPENDENCE variable=OBRAM inter false
 						#pragma HLS unroll
 							float mult = IBRAM[batch_cnt][row+row_k][col+col_k]*WBRAM[co][row_k][col_k];
-							if(row_k==0)
+							if(col_k==0&&row_k==0)
 								OBRAM[batch_cnt][co][row*28+col]=mult;
 							else
 								OBRAM[batch_cnt][co][row*28+col]+=mult;
@@ -204,7 +204,7 @@ void CONVOLUTION_LAYER_2(float input[image_Batch*6*14*14],
 										WBRAM[depth_out][depth_in][row_k][col_k];
 							}
 							acc = (mult[0]+mult[1])+(mult[2]+mult[3])+(mult[4]+mult[5]);
-							if(row_k==0)
+							if(col_k==0&&row_k==0)
 								OBRAM[batch_cnt][depth_out][row*10 + col] = acc;
 							else
 								OBRAM[batch_cnt][depth_out][row*10 + col] += acc;
@@ -306,7 +306,7 @@ void CONVOLUTION_LAYER_3(float input[image_Batch*16*5*5],
 						acc[i] = (mult[ii]+mult[ii+1])+(mult[ii+2]+mult[ii+3]);
 					}
 					result = (acc[0]+acc[1])+(acc[2]+acc[3]);
-					if(row_k==0)
+					if(col_k==0&&row_k==0)
 						OBRAM[batch_cnt][co]=result;
 					else
 						OBRAM[batch_cnt][co]+=result;

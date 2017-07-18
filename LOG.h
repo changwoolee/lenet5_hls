@@ -34,5 +34,76 @@ void print_log(string filename,stringstream* ss){
 	}
 	file.close();
 }
+#ifdef LOG
+void get_log(float* input_layer, float* hconv1, float* pool1, float* hconv2, float* pool2, float* hconv3, float* hfc1, float* output){
+	stringstream ss;
+		for(int i=0;i<32;i++){
+			for(int j=0;j<32;j++){
+				ss<<input_layer[i*32+j]<<" ";//printf("%1.1f ",input_layer[i*32+j]);
+			}
+			ss<<"\n";
+		}
+		ss<<"\n";
+		for(int i=0;i<6;i++){
+			for(int j=0;j<28;j++){
+				for(int k=0;k<28;k++){
+					ss<<hconv1[i*28*28+j*28+k]<<" ";//printf("%1.1f ",hconv1[i*28*28+j*28+k]);
+				}
+				ss<<"\n";
+			}
+			ss<<"\n";
+		}
+
+		for(int i=0;i<6;i++){
+			for(int j=0;j<14;j++){
+				for(int k=0;k<14;k++){
+					ss<<pool1[i*14*14+j*14+k]<<" ";//printf("%1.1f ",pool1[i*14*14+j*14+k]);
+				}
+				ss<<"\n";
+			}
+			ss<<"\n";
+		}
+
+		for(int i=0;i<16;i++){
+			for(int j=0;j<10;j++){
+				for(int k=0;k<10;k++){
+					ss<<hconv2[i*100+j*10+k]<<" ";//printf("%1.1f ",hconv2[i*100+j*10+k]);
+				}
+				ss<<"\n";
+			}
+			ss<<"\n";
+		}
+		for(int i=0;i<16;i++){
+			for(int j=0;j<5;j++){
+				for(int k=0;k<5;k++){
+					ss<<pool2[i*25+j*5+k]<<" ";//printf("%1.1f ",pool2[i*25+j*5+k]);
+				}
+				ss<<"\n";
+			}
+			ss<<"\n";
+		}
+
+		for(int i=0;i<120;i++){
+			ss<<hconv3[i]<< " ";//printf("%1.1f ",hconv3[i]);
+		}
+		ss<<"\n";
+
+		for(int i=0;i<84;i++){
+			ss<<hfc1[i]<<" ";//printf("%1.1f ",hfc1[i]);
+		}
+		ss<<"\n";
+
+		for(int i=0;i<10;i++){
+			ss<<output[i]<<" ";//printf("%f ",output[i]);
+		}
+		ss<<"\n";
+#ifdef HW_TEST
+		print_log("/mnt/model_log/conv_steps_hw.log",&ss);
+#else
+		print_log("/mnt/model_log/conv_steps_sw.log",&ss);
+#endif
+}
+#endif
+
 
 #endif /* SRC_LOG_H_ */

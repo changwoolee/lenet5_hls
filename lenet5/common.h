@@ -7,10 +7,14 @@
 // Environment Option
 // ===============================================
 
-//#define SW_TEST
-#define HW_TEST
+//////////////////////// Options ///////////////////////
+//#define SW_TEST			// SW version
+#define HW_TEST		// HW version
 
-// Debug_Log_Print Option
+//#define LOG			// print layer result logs
+
+
+/////////////////////// Layer config ///////////////////
 #define image_Move 10000
 #define image_Batch 1
 

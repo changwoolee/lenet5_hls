@@ -40,19 +40,19 @@ int main(void){
 	clock_t start_point, end_point;
 	start_point = clock();
 
-	cout<<"-------------------------------------------------------\n"
-		<<"LeNet-5(Max pool) HW accelerator test\n"
+	cout<<"------------------------------------------------------------------\n"
+		<<"                   LeNet-5 HW accelerator test\n"
+		<<"                         version 0.2.1\n"
 #ifdef HW_TEST
-		<< "HW TEST "
+		<<"                            HW Mode\n"
 #else
-		<< "SW TEST "
+		<< "                           SW Mode\n"
 #endif
-		<<"version 0.2.0\n"
 		<<"Original source : Acclerationg Lenet-5 (Base Version) for Default,\n"
 		<<"implemented by Constant Park, HYU, ESoCLab[Version 1.0]\n"
 		<<"HW implementated by CW Lee & JH Woo\n"
 		<<"batch : "<<image_Batch<<" test img num : "<<image_Move<<"\n"
-		<<"-------------------------------------------------------"<<endl;
+		<<"------------------------------------------------------------------"<<endl;
 
 
 	float* MNIST_IMG = (float*) malloc(image_Move*MNIST_PAD_SIZE*sizeof(float)); // MNIST TEST IMG
@@ -87,8 +87,6 @@ int main(void){
 		exit(1);
 	}
 	
-
-
 	cout<<"Load models"<<endl;
 	load_model("/mnt/LeNet5/filter/Wconv1.mdl",Wconv1,CONV_1_TYPE*CONV_1_SIZE);
 	load_model("/mnt/LeNet5/filter/Wconv3.mdl",Wconv2,CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE);
@@ -133,6 +131,9 @@ int main(void){
 
 	// test number
 	int test_num = image_Move/image_Batch;
+#ifdef LOG
+	stringstream ss;
+#endif
 #ifdef HW_TEST
 	vector<double> result_hw;
 	double accuracy_hw;
@@ -141,114 +142,38 @@ int main(void){
 	for(int i=0;i<test_num;i++){
 		for(int batch=0;batch<image_Batch*INPUT_WH*INPUT_WH;batch++)
 			input_layer[batch] = MNIST_IMG[i*MNIST_PAD_SIZE + batch];
-		
-	/*	int init;
-		if(i==0)
-			init = 1;
-		else
-			init = 0;*/
-	/*	for(int i=0;i<32;i++){
-			for(int j=0;j<32;j++){
-				printf("%1.1f ",input_layer[i*32+j]);
-			}
-			cout<<"\n";
-		}
-		cout<<"\n";*/
-		//hw_ctr_tot.start();// counter for total test
 
-		// C1 start
-		//hw_ctr_conv1.start(); // counter for C1 layer
-		//CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1,6*25,6);
+		// C1 layer
 		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1);//, init);
-		//hw_ctr_conv1.stop();
-	/*	for(int i=0;i<6;i++){
-			for(int j=0;j<28;j++){
-				for(int k=0;k<28;k++){
-					printf("%1.1f ",hconv1[i*28*28+j*28+k]);
-				}
-				cout<<"\n";
-			}
-			cout<<"\n";
-		}
-*/
-		// S1 start
-		//hw_ctr_pool1.start();
+
+		// S1 layer
 		POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
-		//MAXPOOL_1_SW(hconv1,pool1);
-		//hw_ctr_pool1.stop();
-	/*	for(int i=0;i<6;i++){
-			for(int j=0;j<14;j++){
-				for(int k=0;k<14;k++){
-					//if(pool1[i*14*14+j*14+k]!=0)
-					//	cout<<"*";
-					//else
-					//	cout<<" ";
-					printf("%1.1f ",pool1[i*14*14+j*14+k]);
-				}
-				cout<<"\n";
-			}
-			cout<<"\n";
-		}*/
-		//C2 start
-		//hw_ctr_conv2.start();
-		//CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2,6*16*25,16);
+
+		// C2 layer
 		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2);//,init);
-		//hw_ctr_conv2.stop();
-	/*	for(int i=0;i<16;i++){
-					for(int j=0;j<10;j++){
-						for(int k=0;k<10;k++){
-							printf("%1.1f ",hconv2[i*100+j*10+k]);
-						}
-						cout<<"\n";
-					}
-					cout<<"\n";
-				}*/
-		//hw_ctr_pool2.start();
+		
+		// S2 layer
 		POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
-		//MAXPOOL_2_SW(hconv2,pool2);
-		//hw_ctr_pool2.stop();
-	/*	for(int i=0;i<16;i++){
-					for(int j=0;j<5;j++){
-						for(int k=0;k<5;k++){
-							printf("%1.1f ",pool2[i*25+j*5+k]);
-						}
-						cout<<"\n";
-					}
-					cout<<"\n";
-				}*/
-		//hw_ctr_conv3.start();
-		//CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3,16*120*25,120);
+
+		// C3 layer
 		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3);//,init);
 
-		//hw_ctr_conv3.stop();
-		//hw_ctr_conv1.stop();
-/*		for(int i=0;i<120;i++){
-			printf("%1.1f ",hconv3[i]);
-		}
-		cout<<"\n";
-*/
-		//hw_ctr_fc1.start();
+		// FC1 layer
 		FULLY_CONNECTED_LAYER_1_SW(hconv3,Wfc1,bfc1,hfc1);
-		//hw_ctr_fc1.stop();
-	/*	for(int i=0;i<84;i++){
-			printf("%1.1f ",hfc1[i]);
-		}cout<<"\n";
-*/
-		//hw_ctr_fc2.start();
-		FULLY_CONNECTED_LAYER_2_SW(hfc1,Wfc2,bfc2,output);
-		//hw_ctr_fc2.stop();
 
-		//hw_ctr_tot.stop();
-	/*	for(int i=0;i<10;i++){
-			printf("%f ",output[i]);
-		}cout<<"\n";
-*/
+		// FC2 layer
+		FULLY_CONNECTED_LAYER_2_SW(hfc1,Wfc2,bfc2,output);
+
+#ifdef LOG
+		get_log(input_layer,hconv1,pool1,hconv2,pool2,hconv3,hfc1,output);
+#endif
+
 		result_hw.push_back(equal(MNIST_LABEL[i],argmax(output)));
 	}
 	// accuracy estimation
-	accuracy_hw = 1.0*accumulate(result_hw.begin(),result_hw.end(),0.0)/result_hw.size();
+	accuracy_hw = 1.0*accumulate(result_hw.begin(),result_hw.end(),0.0);
 	cout<<"HW test completed"<<endl;
-	cout<<"accuracy : "<<accuracy_hw<<endl;
+	cout<<"accuracy : "<<accuracy_hw<<"/"<<result_hw.size()<<endl;
 #endif
 
 
@@ -260,53 +185,35 @@ int main(void){
 	// SW test
 	cout<< "SW test start"<<endl;
 	for(int i=0;i<test_num;i++){
-		for(int batch=0;batch<image_Batch*INPUT_WH*INPUT_WH;batch++)
+		for(int batch=0;batch<image_Batch*INPUT_WH*INPUT_WH;batch++){
 			input_layer[batch] = MNIST_IMG[i*MNIST_PAD_SIZE + batch];
+		}
 
-	//	sw_ctr_tot.start();// counter for total test
-
-		// C1 start
-		//sw_ctr_conv1.start(); // counter for C1 layer
 		CONVOLUTION_LAYER_1_SW(input_layer,Wconv1,bconv1,hconv1);
-		//sw_ctr_conv1.stop();
 
-		// S1 start
-		//sw_ctr_pool1.start();
 		POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
-		//MAXPOOL_1_SW(hconv1,pool1);
-		//sw_ctr_pool1.stop();
-		//sw_ctr_conv1.stop();
 
-		//C2 start
-		//sw_ctr_conv2.start();
 		CONVOLUTION_LAYER_2_SW(pool1,Wconv2,bconv2,hconv2);
-		//sw_ctr_conv2.stop();
 
-		//sw_ctr_pool2.start();
 		POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
-		//MAXPOOL_2_SW(hconv2,pool2);
-		//sw_ctr_pool2.stop();
-		//sw_ctr_conv2.stop();
-		//sw_ctr_conv3.start();
+
 		CONVOLUTION_LAYER_3_SW(pool2,Wconv3,bconv3,hconv3);
-		//sw_ctr_conv3.stop();
-		//sw_ctr_conv1.stop();
 
-
-		//sw_ctr_fc1.start();
 		FULLY_CONNECTED_LAYER_1_SW(hconv3,Wfc1,bfc1,hfc1);
 
-		//sw_ctr_fc2.start();
-		FULLY_CONNECTED_LAYER_2_SW(hfc1,Wfc2,bfc2,output);
-		//sw_ctr_fc2.stop();
 
-		//sw_ctr_tot.stop();
+		FULLY_CONNECTED_LAYER_2_SW(hfc1,Wfc2,bfc2,output);
 
 		result_sw.push_back(equal(MNIST_LABEL[i],argmax(output)));
+
+#ifdef LOG
+		get_log(input_layer,hconv1,pool1,hconv2,pool2,hconv3,hfc1,output);
+#endif
+
 	}
-	accuracy_sw = 1.0*accumulate(result_sw.begin(),result_sw.end(),0.0)/result_sw.size();
+	accuracy_sw = accumulate(result_sw.begin(),result_sw.end(),0.0);
 	cout<<"SW test completed"<<endl;
-	cout<<"accuracy : "<<accuracy_sw<<endl;
+	cout<<"accuracy : "<<accuracy_sw<<"/"<<result_sw.size()<<endl;
 #endif
 	sds_free(input_layer);
 	sds_free(hconv1);
@@ -348,7 +255,7 @@ int main(void){
 		 <<hw_ctr_conv1.avg_cpu_cycles()<<endl;
 	ss <<"Speed up: "<<speedup_c1<<endl;
 	ss <<"----------------------------------------------------------------------------"<<endl;
-	/*double speedup_s1 = (double) sw_ctr_pool1.avg_cpu_cycles() / (double) hw_ctr_pool1.avg_cpu_cycles();
+	double speedup_s1 = (double) sw_ctr_pool1.avg_cpu_cycles() / (double) hw_ctr_pool1.avg_cpu_cycles();
 	ss <<"Average number of CPU cycles running S1 in software: "
 		 <<sw_ctr_pool1.avg_cpu_cycles()<<endl;
 	ss <<"Average number of CPU cycles running S1 in hardware: "
@@ -362,7 +269,7 @@ int main(void){
 		 <<hw_ctr_conv2.avg_cpu_cycles()<<endl;
 	ss <<"Speed up: "<<speedup_c2<<endl;
 	ss <<"----------------------------------------------------------------------------"<<endl;
-	/*double speedup_s2 = (double) sw_ctr_pool2.avg_cpu_cycles() / (double) hw_ctr_pool2.avg_cpu_cycles();
+	double speedup_s2 = (double) sw_ctr_pool2.avg_cpu_cycles() / (double) hw_ctr_pool2.avg_cpu_cycles();
 	ss <<"Average number of CPU cycles running S2 in software: "
 		 <<sw_ctr_pool2.avg_cpu_cycles()<<endl;
 	ss <<"Average number of CPU cycles running S2 in hardware: "
@@ -393,9 +300,9 @@ int main(void){
 		 <<hw_ctr_tot.avg_cpu_cycles()<<endl;
 	ss <<"Speed up: "<<speedup_tot<<endl;
 	ss <<"----------------------------------------------------------------------------"<<endl;
-	cout<<ss.str();
+	cout<<ss.str();*/
 
-	print_log("/mnt/model_log/performance.log",&ss);*/
+	//print_log("/mnt/model_log/performance.log",&ss);
 
 	cout<<"Test Completed"<<endl;
 

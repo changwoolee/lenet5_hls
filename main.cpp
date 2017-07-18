@@ -36,9 +36,18 @@ void load_model(string filename, float* weight, int size) {
 }
 using namespace std;
 int main(void){
+	// Calc execution time
+	clock_t start_point, end_point;
+	start_point = clock();
+
 	cout<<"-------------------------------------------------------\n"
 		<<"LeNet-5(Max pool) HW accelerator test\n"
-		<<"version 0.1.0\n"
+#ifdef HW_TEST
+		<< "HW TEST "
+#else
+		<< "SW TEST "
+#endif
+		<<"version 0.2.0\n"
 		<<"Original source : Acclerationg Lenet-5 (Base Version) for Default,\n"
 		<<"implemented by Constant Park, HYU, ESoCLab[Version 1.0]\n"
 		<<"HW implementated by CW Lee & JH Woo\n"
@@ -108,8 +117,8 @@ int main(void){
 	float* hconv2 		= (float*) sds_alloc(image_Batch * CONV_2_TYPE * CONV_2_OUTPUT_SIZE*sizeof(float));
 	float* pool2 		= (float*) sds_alloc(image_Batch * CONV_2_TYPE * POOL_2_OUTPUT_SIZE*sizeof(float));
 	float* hconv3 		= (float*) sds_alloc(image_Batch * CONV_3_TYPE*sizeof(float));
-	float* hfc1 		= (float*) sds_alloc(image_Batch * OUTPUT_NN_1_SIZE*sizeof(float));
-	float* output 		= (float*) sds_alloc(image_Batch * OUTPUT_NN_2_SIZE*sizeof(float));
+	float* hfc1 		= (float*) malloc(image_Batch * OUTPUT_NN_1_SIZE*sizeof(float));
+	float* output 		= (float*) malloc(image_Batch * OUTPUT_NN_2_SIZE*sizeof(float));
 	if(!input_layer || !hconv1 || !pool1 || !hconv2 || !pool2 || !hconv3 || !hfc1 || !output){
 		cout<<"Memory allocation error(2)"<<endl;
 		exit(1);
@@ -133,11 +142,11 @@ int main(void){
 		for(int batch=0;batch<image_Batch*INPUT_WH*INPUT_WH;batch++)
 			input_layer[batch] = MNIST_IMG[i*MNIST_PAD_SIZE + batch];
 		
-		ap_uint<1> init;
+	/*	int init;
 		if(i==0)
 			init = 1;
 		else
-			init = 0;
+			init = 0;*/
 	/*	for(int i=0;i<32;i++){
 			for(int j=0;j<32;j++){
 				printf("%1.1f ",input_layer[i*32+j]);
@@ -150,7 +159,7 @@ int main(void){
 		// C1 start
 		//hw_ctr_conv1.start(); // counter for C1 layer
 		//CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1,6*25,6);
-		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,pool1, init);
+		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1);//, init);
 		//hw_ctr_conv1.stop();
 	/*	for(int i=0;i<6;i++){
 			for(int j=0;j<28;j++){
@@ -183,7 +192,7 @@ int main(void){
 		//C2 start
 		//hw_ctr_conv2.start();
 		//CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2,6*16*25,16);
-		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,pool2,init);
+		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2);//,init);
 		//hw_ctr_conv2.stop();
 	/*	for(int i=0;i<16;i++){
 					for(int j=0;j<10;j++){
@@ -209,7 +218,7 @@ int main(void){
 				}*/
 		//hw_ctr_conv3.start();
 		//CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3,16*120*25,120);
-		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3,init);
+		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3);//,init);
 
 		//hw_ctr_conv3.stop();
 		//hw_ctr_conv1.stop();
@@ -305,7 +314,8 @@ int main(void){
 	sds_free(hconv3);
 	sds_free(pool1);
 	sds_free(pool2);
-	sds_free(output);
+	free(hfc1);
+	free(output);
 
 
 	sds_free(Wconv1);
@@ -388,6 +398,16 @@ int main(void){
 	print_log("/mnt/model_log/performance.log",&ss);*/
 
 	cout<<"Test Completed"<<endl;
+
+	end_point = clock();
+
+#ifdef HW_TEST
+	cout<<"HW execution time : "
+#else
+	cout<<"SW execution time : "
+#endif
+	<<(double)(end_point-start_point)/CLOCKS_PER_SEC<< " seconds"<<endl;
+
 	return 0;
 
 }

@@ -18,7 +18,7 @@ float relu(float x){
 void CONVOLUTION_LAYER_1(float input[image_Batch*32*32],
 		float weights[6*5*5],
 		float bias[6],
-		float output[image_Batch*6*28*28], ap_uint<1> init
+		float output[image_Batch*6*28*28]//, int init
 		)
 {
 
@@ -36,14 +36,14 @@ void CONVOLUTION_LAYER_1(float input[image_Batch*32*32],
 		for(int i=0;i<INPUT_WH;i++){
 			copy_input_3 :
 			for(int j=0;j<INPUT_WH;j++){
-#pragma HLS PIPELINE II=1
+			#pragma HLS PIPELINE II=1
 				IBRAM[batch_cnt][i][j] = input[batch_cnt*INPUT_WH*INPUT_WH+i*INPUT_WH + j];
 			}
 		}
 	}
 
 	// load weights & bias at first iteration only
-	if(init){
+	//if(init){
 		copy_kernel_1:
 		for(int i=0;i<CONV_1_TYPE;i++){
 			copy_kernel_2:
@@ -61,7 +61,7 @@ void CONVOLUTION_LAYER_1(float input[image_Batch*32*32],
 	#pragma HLS PIPELINE II=1
 			biasBRAM[i] = bias[i];
 		}
-	}
+	//}
 
 	//////////////////////////////////////////////////////////////////////
 	//						   Convolution								//
@@ -110,7 +110,7 @@ void CONVOLUTION_LAYER_1(float input[image_Batch*32*32],
 void CONVOLUTION_LAYER_2(float input[image_Batch*6*14*14],
 		float weights[6*16*5*5],
 		float bias[CONV_2_TYPE],
-		float output[image_Batch*16*10*10], ap_uint<1> init
+		float output[image_Batch*16*10*10]//, int init
 		)
 {
 
@@ -119,12 +119,12 @@ void CONVOLUTION_LAYER_2(float input[image_Batch*6*14*14],
 
 
 	float IBRAM[image_Batch][CONV_1_TYPE][CONV_2_INPUT_WH][CONV_2_INPUT_WH];
-	float WBRAM[CONV_1_TYPE][CONV_2_TYPE][CONV_2_WH][CONV_2_WH];
+	float WBRAM[CONV_2_TYPE][CONV_1_TYPE][CONV_2_WH][CONV_2_WH];
 	float biasBRAM[CONV_2_TYPE];
 	float OBRAM[image_Batch][CONV_2_TYPE][CONV_2_OUTPUT_SIZE];
 #pragma HLS array_partition variable=IBRAM complete dim=2
-#pragma HLS array_partition variable=WBRAM complete dim=1
-#pragma HLS array_partition variable=WBRAM cyclic factor=C2_N_PE dim=2
+#pragma HLS array_partition variable=WBRAM complete dim=2
+#pragma HLS array_partition variable=WBRAM cyclic factor=C2_N_PE dim=1
 #pragma HLS array_partition variable=biasBRAM complete dim=0
 #pragma HLS array_partition variable=OBRAM cyclic factor=C2_N_PE dim=2
 
@@ -149,17 +149,17 @@ void CONVOLUTION_LAYER_2(float input[image_Batch*6*14*14],
 		}
 	}
 
-	if(init){
+//	if(init){
 	copy_kernel_1 :
-	for (int i = 0; i < CONV_1_TYPE; i++) {
+	for (int i = 0; i < CONV_2_TYPE; i++) {
 		copy_kernel_2 :
-		for(int j=0;j<CONV_2_TYPE;j++){
+		for(int j=0;j<CONV_1_TYPE;j++){
 			copy_kernel_3 :
 			for(int k=0;k<CONV_2_WH;k++){
 				copy_kernel_4 :
 				for(int l=0;l<CONV_2_WH;l++){
 #pragma HLS pipeline II=1
-					WBRAM[i][j][k][l] = weights[i*CONV_2_TYPE*CONV_2_SIZE
+					WBRAM[i][j][k][l] = weights[i*CONV_1_TYPE*CONV_2_SIZE
 													 + j*CONV_2_SIZE
 													 + k*CONV_2_WH
 													 + l];
@@ -173,7 +173,7 @@ void CONVOLUTION_LAYER_2(float input[image_Batch*6*14*14],
 #pragma HLS pipeline II=1
 		biasBRAM[i] = bias[i];
 	}
-	}
+	//}
 	//////////////////////////////////////////////////////////////////////
 	//						   Convolution								//
 	//////////////////////////////////////////////////////////////////////
@@ -201,7 +201,7 @@ void CONVOLUTION_LAYER_2(float input[image_Batch*6*14*14],
 							for (int depth_in = 0; depth_in < CONV_1_TYPE; depth_in++) {
 							#pragma HLS unroll
 								mult[depth_in] = IBRAM[batch_cnt][depth_in][row+row_k][col+col_k] *
-										WBRAM[depth_in][depth_out][row_k][col_k];
+										WBRAM[depth_out][depth_in][row_k][col_k];
 							}
 							acc = (mult[0]+mult[1])+(mult[2]+mult[3])+(mult[4]+mult[5]);
 							if(row_k==0)
@@ -221,7 +221,7 @@ void CONVOLUTION_LAYER_2(float input[image_Batch*6*14*14],
 			int depth_offset = j*100;
 			for(int k=0;k<CONV_2_OUTPUT_SIZE;k++){
 #pragma HLS pipeline II=1
-				output[i*1600+depth_offset+k]=_tanh(OBRAM[i][j][k]+bias[j]);
+				output[i*1600+depth_offset+k]=_tanh(OBRAM[i][j][k]+biasBRAM[j]);
 			}
 		}
 	}
@@ -234,15 +234,15 @@ void CONVOLUTION_LAYER_2(float input[image_Batch*6*14*14],
 void CONVOLUTION_LAYER_3(float input[image_Batch*16*5*5],
 		float weights[16*120*5*5],
 		float bias[120],
-		float output[image_Batch*120], ap_uint<1> init
+		float output[image_Batch*120]//, int init
 		)
 {
 	
 	
 	float IBRAM[image_Batch][CONV_2_TYPE][CONV_3_INPUT_WH][CONV_3_INPUT_WH];
-	float WBRAM[CONV_2_TYPE][120][CONV_3_WH][CONV_3_WH];
+	float WBRAM[CONV_3_TYPE][CONV_2_TYPE][CONV_3_WH][CONV_3_WH];
 #pragma HLS array_partition variable=IBRAM complete dim=2
-#pragma HLS array_partition variable=WBRAM complete dim=1
+#pragma HLS array_partition variable=WBRAM complete dim=2
 
 
 	float biasBRAM[CONV_3_TYPE];
@@ -264,25 +264,25 @@ void CONVOLUTION_LAYER_3(float input[image_Batch*16*5*5],
 			}
 		}
 	}
-	if(init){
-	copy_kernel_1:
-	for(int i=0;i<CONV_2_TYPE;i++){
-		for(int j=0;j<120; j++){
-			for(int k=0;k<CONV_3_WH; k++){
-				for(int l=0;l<CONV_3_WH;l++){
-#pragma HLS pipeline
-					WBRAM[i][j][k][l] = weights[i*120*CONV_3_SIZE + j*25 + k*5+l];
+	//if(init){
+		copy_kernel_1:
+		for(int i=0;i<CONV_3_TYPE;i++){
+			for(int j=0;j<CONV_2_TYPE; j++){
+				for(int k=0;k<CONV_3_WH; k++){
+					for(int l=0;l<CONV_3_WH;l++){
+					#pragma HLS pipeline
+						WBRAM[i][j][k][l] = weights[i*CONV_2_TYPE*CONV_3_SIZE + j*25 + k*5+l];
+					}
 				}
 			}
 		}
-	}
 
-	copy_bias:
-	for(int i=0;i<120; i++){
-#pragma HLS pipeline II=1
-		biasBRAM[i] = bias[i];
-	}
-	}
+		copy_bias:
+		for(int i=0;i<120; i++){
+		#pragma HLS pipeline II=1
+			biasBRAM[i] = bias[i];
+		}
+	//}
 	BATCH:
 	for (int batch_cnt = 0; batch_cnt<image_Batch; batch_cnt++) {
 		ROW_K:
@@ -299,7 +299,7 @@ void CONVOLUTION_LAYER_3(float input[image_Batch*16*5*5],
 						D_IN:
 					for(int ci=0;ci<16;ci++){
 					#pragma HLS unroll
-						mult[ci] = IBRAM[batch_cnt][ci][row_k][col_k]*WBRAM[ci][co][row_k][col_k];
+						mult[ci] = IBRAM[batch_cnt][ci][row_k][col_k]*WBRAM[co][ci][row_k][col_k];
 					}
 					for(int i=0,ii=0;i<4;i++,ii+=4){
 					#pragma HLS unroll
@@ -318,7 +318,7 @@ void CONVOLUTION_LAYER_3(float input[image_Batch*16*5*5],
 	for(int i=0;i<image_Batch;i++){
 		for(int j=0;j<120;j++)
 #pragma HLS pipeline II=1
-		output[i*120+j] = _tanh(OBRAM[i][j]+bias[j]);
+		output[i*120+j] = _tanh(OBRAM[i][j]+biasBRAM[j]);
 	}
 }
 

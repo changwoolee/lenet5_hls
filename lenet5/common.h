@@ -6,10 +6,12 @@
 
 // Environment Option
 // ===============================================
-#define SW_TEST
+
+//#define SW_TEST
+#define HW_TEST
 
 // Debug_Log_Print Option
-#define image_Move 1000
+#define image_Move 10000
 #define image_Batch 1
 
 #define label_type int

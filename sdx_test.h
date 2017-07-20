@@ -16,7 +16,7 @@
 
 #define TEST_ITR 1000
 using namespace std;
-class perf_counter
+/*class perf_counter
 {
 public:
      unsigned long long int tot, cnt, calls;
@@ -26,7 +26,7 @@ public:
      inline void stop() { tot += (sds_clock_counter() - cnt); };
      inline uint64_t avg_cpu_cycles() { return (tot / calls); };
 };
-
+*/
 int check(float* arr1, float* arr2, int N){
 
 	for(int i=0;i<N;i++){

@@ -112,14 +112,7 @@ void CONVOLUTION_LAYER_2_SW(float* input_feature,
 	int depth_in, depth_out;
 	float temp = 0;
 	int batch_idx;
-	static const bool tbl[] = {
-			O, X, X, X, O, O, O, X, X, O, O, O, O, X, O, O,
-			O, O, X, X, X, O, O, O, X, X, O, O, O, O, X, O,
-			O, O, O, X, X, X, O, O, O, X, X, O, X, O, O, O,
-			X, O, O, O, X, X, O, O, O, O, X, X, O, X, O, O,
-			X, X, O, O, O, X, X, O, O, O, O, X, O, O, X, O,
-			X, X, X, O, O, O, X, X, O, O, O, O, X, O, O, O
-		};
+
 	for(int i=0;i<1600;i++){
 		output_feature[i] = 0;
 	}

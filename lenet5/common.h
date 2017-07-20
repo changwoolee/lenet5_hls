@@ -1,3 +1,5 @@
+#ifndef SRC_LENET5_COMMON_H_
+#define SRC_LENET5_COMMON_H_
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
@@ -51,7 +53,16 @@
 #define CONV_2_SIZE 25
 #define CONV_2_TYPE 16
 #define CONV_2_WH 5
-
+#define O 1
+#define X 0
+static const int tbl[] = {
+			O, X, X, X, O, O, O, X, X, O, O, O, O, X, O, O,
+			O, O, X, X, X, O, O, O, X, X, O, O, O, O, X, O,
+			O, O, O, X, X, X, O, O, O, X, X, O, X, O, O, O,
+			X, O, O, O, X, X, O, O, O, O, X, X, O, X, O, O,
+			X, X, O, O, O, X, X, O, O, O, O, X, O, O, X, O,
+			X, X, X, O, O, O, X, X, O, O, O, O, X, O, O, O
+		};
 #define POOL_2_INPUT_WH 10
 #define POOL_2_OUTPUT_WH 5
 #define POOL_2_TYPE 16
@@ -101,3 +112,4 @@ time_t start_time;
 time_t end_time;
 
 */
+#endif

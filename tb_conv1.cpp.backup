@@ -65,13 +65,13 @@ int main(void){
 	READ_MNIST_DATA("/mnt/LeNet5/MNIST_DATA/t10k-images.idx3-ubyte",MNIST_IMG,-1.0f, 1.0f, image_Move);
 	READ_MNIST_LABEL("/mnt/LeNet5/MNIST_DATA/t10k-labels.idx1-ubyte",MNIST_LABEL,image_Move,false);
 
-	float* Wconv1= (float*) sds_alloc(CONV_1_TYPE*CONV_1_SIZE*sizeof(float));
-	float* bconv1=(float*)sds_alloc(CONV_1_TYPE*sizeof(float));
-	float* Wconv2=(float*)sds_alloc(CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE*sizeof(float));
-	float* bconv2=(float*)sds_alloc(CONV_2_TYPE*sizeof(float));
-	float* Wconv3=(float*)sds_alloc(CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE*sizeof(float));
-	float* bconv3=(float*)sds_alloc(CONV_3_TYPE*sizeof(float));
-	
+	float* Wconv1= (float*) malloc(CONV_1_TYPE*CONV_1_SIZE*sizeof(float));
+	float* bconv1=(float*)malloc(CONV_1_TYPE*sizeof(float));
+	float* Wconv2=(float*)malloc(CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE*sizeof(float));
+	float* bconv2=(float*)malloc(CONV_2_TYPE*sizeof(float));
+	float* Wconv3=(float*)malloc(CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE*sizeof(float));
+	float* bconv3=(float*)malloc(CONV_3_TYPE*sizeof(float));
+
 	float* Wpool1= (float*) malloc(POOL_1_TYPE*4*sizeof(float));
 	float* Wpool2= (float*) malloc(POOL_2_TYPE*4*sizeof(float));
 	float* bpool1= (float*) malloc(POOL_1_TYPE*sizeof(float));
@@ -81,16 +81,20 @@ int main(void){
 	float* bfc1 = (float*) malloc(BIAS_NN_1_SIZE*sizeof(float));
 	float* Wfc2 = (float*) malloc(FILTER_NN_2_SIZE*sizeof(float));
 	float* bfc2 = (float*) malloc(BIAS_NN_2_SIZE*sizeof(float));
-	
+
 	if(!Wconv1||!Wconv2||!Wconv3||!bconv1||!bconv2||!bconv3||!Wpool1||!Wpool2||!bpool1||!bpool2||!Wfc1||!Wfc2||!bfc1||!bfc2){
 		cout<<"mem alloc error(1)"<<endl;
 		exit(1);
 	}
-	
-	cout<<"Load models"<<endl;
-	load_model("/mnt/LeNet5/filter/Wconv1.mdl",Wconv1,CONV_1_TYPE*CONV_1_SIZE);
 
-	load_model("/mnt/LeNet5/filter/Wconv3_modify.mdl",Wconv2,CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE);
+	cout<<"Load models"<<endl;
+	//load_model("/mnt/LeNet5/filter/Wconv1.mdl",Wconv1,CONV_1_TYPE*CONV_1_SIZE);
+	for(int i=0;i<6;i++){
+		for(int j=0;j<25;j++){
+			Wconv1[i*25+j] = (float) (i*25+j);
+		}
+	}
+	/*load_model("/mnt/LeNet5/filter/Wconv3.mdl",Wconv2,CONV_2_TYPE*CONV_1_TYPE*CONV_2_SIZE);
 	load_model("/mnt/LeNet5/filter/Wconv5.mdl",Wconv3,CONV_3_TYPE*CONV_2_TYPE*CONV_3_SIZE);
 
 	load_model("/mnt/LeNet5/filter/bconv1.mdl",bconv1,CONV_1_TYPE);
@@ -107,15 +111,15 @@ int main(void){
 	load_model("/mnt/LeNet5/filter/Wfc2.mdl",Wfc2,FILTER_NN_2_SIZE);
 
 	load_model("/mnt/LeNet5/filter/bfc1.mdl",bfc1,BIAS_NN_1_SIZE);
-	load_model("/mnt/LeNet5/filter/bfc2.mdl",bfc2,BIAS_NN_2_SIZE);
+	load_model("/mnt/LeNet5/filter/bfc2.mdl",bfc2,BIAS_NN_2_SIZE);*/
 	cout<<"model loaded"<<endl;
 	// Memory allocation
-	float* input_layer	= (float*) sds_alloc(image_Batch *INPUT_WH * INPUT_WH*sizeof(float));
-	float* hconv1 		= (float*) sds_alloc(image_Batch * CONV_1_TYPE * CONV_1_OUTPUT_SIZE*sizeof(float));
-	float* pool1 		= (float*) sds_alloc(image_Batch * CONV_1_TYPE * POOL_1_OUTPUT_SIZE*sizeof(float));
-	float* hconv2 		= (float*) sds_alloc(image_Batch * CONV_2_TYPE * CONV_2_OUTPUT_SIZE*sizeof(float));
-	float* pool2 		= (float*) sds_alloc(image_Batch * CONV_2_TYPE * POOL_2_OUTPUT_SIZE*sizeof(float));
-	float* hconv3 		= (float*) sds_alloc(image_Batch * CONV_3_TYPE*sizeof(float));
+	float* input_layer	= (float*) malloc(image_Batch *INPUT_WH * INPUT_WH*sizeof(float));
+	float* hconv1 		= (float*) malloc(image_Batch * CONV_1_TYPE * CONV_1_OUTPUT_WH*CONV_1_OUTPUT_WH*sizeof(float));
+	float* pool1 		= (float*) malloc(image_Batch * CONV_1_TYPE * POOL_1_OUTPUT_SIZE*sizeof(float));
+	float* hconv2 		= (float*) malloc(image_Batch * CONV_2_TYPE * CONV_2_OUTPUT_SIZE*sizeof(float));
+	float* pool2 		= (float*) malloc(image_Batch * CONV_2_TYPE * POOL_2_OUTPUT_SIZE*sizeof(float));
+	float* hconv3 		= (float*) malloc(image_Batch * CONV_3_TYPE*sizeof(float));
 	float* hfc1 		= (float*) malloc(image_Batch * OUTPUT_NN_1_SIZE*sizeof(float));
 	float* output 		= (float*) malloc(image_Batch * OUTPUT_NN_2_SIZE*sizeof(float));
 	if(!input_layer || !hconv1 || !pool1 || !hconv2 || !pool2 || !hconv3 || !hfc1 || !output){
@@ -139,27 +143,29 @@ int main(void){
 	vector<double> result_hw;
 	double accuracy_hw;
 	 //HW test start
-	int init=1;
 	cout<<"HW test start"<<endl;
-	for(int i=0;i<test_num;i++,init&=0){
+	for(int i=0;i<test_num;i++){
 		for(int batch=0;batch<image_Batch*INPUT_WH*INPUT_WH;batch++)
-			input_layer[batch] = MNIST_IMG[i*MNIST_PAD_SIZE + batch];
-
+			input_layer[batch] = 1.0;
 
 		// C1 layer
-		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1, init);
-
+		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1);//, init);
+		cout<<hconv1[0]<<endl;
+		if(hconv1[0] == 300.0f)
+			cout<<"Test passed"<<endl;
+		else
+			cout<<"Test failed"<<endl;
 		// S1 layer
-		POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
+		/*POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
 
 		// C2 layer
-		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2,init);
-		
+		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2);//,init);
+
 		// S2 layer
 		POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
 
 		// C3 layer
-		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3,init);
+		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3);//,init);
 
 		// FC1 layer
 		FULLY_CONNECTED_LAYER_1_SW(hconv3,Wfc1,bfc1,hfc1);
@@ -171,12 +177,12 @@ int main(void){
 		get_log(&ss,input_layer,hconv1,pool1,hconv2,pool2,hconv3,hfc1,output);
 #endif
 
-		result_hw.push_back(equal(MNIST_LABEL[i],argmax(output)));
+		result_hw.push_back(equal(MNIST_LABEL[i],argmax(output)));*/
 	}
 	// accuracy estimation
-	accuracy_hw = 1.0*accumulate(result_hw.begin(),result_hw.end(),0.0);
+	/*accuracy_hw = 1.0*accumulate(result_hw.begin(),result_hw.end(),0.0);
 	cout<<"HW test completed"<<endl;
-	cout<<"accuracy : "<<accuracy_hw<<"/"<<result_hw.size()<<endl;
+	cout<<"accuracy : "<<accuracy_hw<<"/"<<result_hw.size()<<endl;*/
 #endif
 
 
@@ -218,22 +224,22 @@ int main(void){
 	cout<<"SW test completed"<<endl;
 	cout<<"accuracy : "<<accuracy_sw<<"/"<<result_sw.size()<<endl;
 #endif
-	sds_free(input_layer);
-	sds_free(hconv1);
-	sds_free(hconv2);
-	sds_free(hconv3);
-	sds_free(pool1);
-	sds_free(pool2);
+	free(input_layer);
+	free(hconv1);
+	free(hconv2);
+	free(hconv3);
+	free(pool1);
+	free(pool2);
 	free(hfc1);
 	free(output);
 
 
-	sds_free(Wconv1);
-	sds_free(Wconv2);
-	sds_free(Wconv3);
-	sds_free(bconv1);
-	sds_free(bconv2);
-	sds_free(bconv3);
+	free(Wconv1);
+	free(Wconv2);
+	free(Wconv3);
+	free(bconv1);
+	free(bconv2);
+	free(bconv3);
 	free(Wpool1);
 	free(bpool1);
 	free(Wpool2);
@@ -245,7 +251,7 @@ int main(void){
 
 	free(MNIST_IMG);
 	free(MNIST_LABEL);
-	
+
 /*
 	stringstream ss;
 	ss <<"HW accuracy : "<<accuracy_hw<<endl;
@@ -312,14 +318,14 @@ int main(void){
 	end_point = clock();
 
 #ifdef HW_TEST
-	cout<<"HW execution time : "
+	//cout<<"HW execution time : "
 #else
-	cout<<"SW execution time : "
+	//cout<<"SW execution time : "
 #endif
-	<<(double)(end_point-start_point)/CLOCKS_PER_SEC<< " seconds"<<endl;
+	//<<(double)(end_point-start_point)/CLOCKS_PER_SEC<< " seconds"<<endl;
 #ifdef LOG
 #ifdef HW_TEST
-		print_log("/mnt/model_log/conv_steps_hw.log",&ss);
+		//print_log("/mnt/model_log/conv_steps_hw.log",&ss);
 #else
 		print_log("/mnt/model_log/conv_steps_sw.log",&ss);
 #endif

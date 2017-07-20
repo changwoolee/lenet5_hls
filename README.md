@@ -22,8 +22,14 @@ FC2 : 84x10
 
 
 ##Accuracy
-SW accuracy : 98.7%  
-HW accuracy : %  
+	SW accuracy : 98.63%    
+	HW accuracy : 98.63%  
+
+## Runtime
+	SW runtime  : 59.4456 seconds  
+	HW runtime  : 16.4012 seconds  
+
+	x3.62 faster 
 
 
 

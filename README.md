@@ -17,11 +17,12 @@ Conv2 : 6x14x14 -> 16x10x10, ksize = 6x16x25, stride = 1
 Pool2 : 16x10x10 -> 16x5x5, average pooling, window size = 2x2, stride = 2  
 Conv3 : 16x5x5 -> 120x1x1, ksize = 16x120x25, stride = 1  
 FC1 : 120x84  
-FC2 : 84x10  
+FC2 : 84x10    
+
   
 
 
-##Accuracy
+##Accuracy  
 	SW accuracy : 98.63%    
 	HW accuracy : 98.63%  
 

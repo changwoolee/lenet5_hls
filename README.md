@@ -26,11 +26,13 @@ FC2 : 84x10
 	SW accuracy : 98.63%    
 	HW accuracy : 98.63%  
 
-## Runtime
+## Runtime  
+	# of images : 10,000, batch size : 1  
+	
 	SW runtime  : 59.4456 seconds  
-	HW runtime  : 16.4012 seconds  
+	HW runtime  : 16.3954 seconds  
 
-	x3.62 faster 
+	speedup : x3.63 faster 
 
 
 

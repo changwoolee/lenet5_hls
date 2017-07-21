@@ -23,8 +23,8 @@ FC2 : 84x10
 
 
 ## Accuracy  
-	SW accuracy : 98.63%    
-	HW accuracy : 98.63%  
+	SW accuracy : 98.63% (single precision fp)    
+	HW accuracy : 98.63% (single precision fp)  
 
 ## Runtime  
 	# of images : 10,000, batch size : 1  

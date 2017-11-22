@@ -1,0 +1,16 @@
+/osver:6.2
+/appcontainer
+/runtime:mrt100_app
+/eh:clr
+/pdb
+"/nativeLink:C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\tools\x64\ilc\lib\Native\vmath.lib"
+/customImports
+/methodBodyFolding
+"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\MDIL\LeNet5 Test.mdilexe"
+"/i:C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\MDIL"
+"/out:C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\Native\LeNet5 Test.exe"
+"/pdbAltPath:C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc"
+"/res:C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\Native.res"
+"/i:C:\Users\woobes\.nuget\packages\microsoft.net.native.sharedlibrary-x64\1.7.0\tools\SharedLibrary\ret\MDIL"
+/shimexe
+"/classlib:SharedLibrary"

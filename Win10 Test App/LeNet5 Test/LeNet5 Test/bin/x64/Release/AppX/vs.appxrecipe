@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Machine>DESKTOP-SGDH24P</Machine>
+    <WindowsUser>woobes</WindowsUser>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetOsVersion>10.0</TargetOsVersion>
+    <TargetOsDescription>Windows 10.0</TargetOsDescription>
+    <SolutionConfiguration>Release|x64</SolutionConfiguration>
+    <PackageArchitecture>x64</PackageArchitecture>
+    <PackageIdentityName>d7592749-a860-41a7-9189-ba66275a4926</PackageIdentityName>
+    <PackageIdentityPublisher>CN=woobes</PackageIdentityPublisher>
+    <IntermediateOutputPath>C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\</IntermediateOutputPath>
+    <RemoteDeploymentType>
+    </RemoteDeploymentType>
+    <PackageRegistrationPath>
+    </PackageRegistrationPath>
+    <RemoveNonLayoutFiles>true</RemoveNonLayoutFiles>
+    <DeployOptionalPackages>false</DeployOptionalPackages>
+    <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
+    <LayoutDir>C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\AppX</LayoutDir>
+    <RegisteredManifestChecksum>027F4655BD35D8228DD278EE1384D951EF09BB5DC5329E999166621001443528</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>d7592749-a860-41a7-9189-ba66275a4926_1.0.0.0_x64__8yk8y7p2hcvxp</RegisteredPackageMoniker>
+    <RegisteredUserModeAppID>d7592749-a860-41a7-9189-ba66275a4926_8yk8y7p2hcvxp!App</RegisteredUserModeAppID>
+    <RegisteredPackageID>d7592749-a860-41a7-9189-ba66275a4926</RegisteredPackageID>
+    <RegisteredPackagePublisher>CN=woobes</RegisteredPackagePublisher>
+    <RegisteredVersion>1.0.0.0</RegisteredVersion>
+    <JitOptimizationSuppressed>True</JitOptimizationSuppressed>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppXManifest Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\AppxManifest.xml">
+      <PackagePath>AppxManifest.xml</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2017-11-09T03:04:23.434</Modified>
+    </AppXManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\Assets\a-2729794_960_720.png">
+      <PackagePath>Assets\a-2729794_960_720.png</PackagePath>
+      <Modified>2017-11-07T07:09:29.809</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\Assets\LockScreenLogo.scale-200.png">
+      <PackagePath>Assets\LockScreenLogo.scale-200.png</PackagePath>
+      <Modified>2017-11-05T07:19:49.241</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\Assets\picture-frame-with-mountain-image_318-40293.jpg">
+      <PackagePath>Assets\picture-frame-with-mountain-image_318-40293.jpg</PackagePath>
+      <Modified>2017-11-07T07:10:03.475</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\Assets\SplashScreen.scale-200.png">
+      <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2017-11-05T07:19:49.241</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\Assets\Square150x150Logo.scale-200.png">
+      <PackagePath>Assets\Square150x150Logo.scale-200.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2017-11-05T07:19:49.241</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\Assets\Square44x44Logo.scale-200.png">
+      <PackagePath>Assets\Square44x44Logo.scale-200.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2017-11-05T07:19:49.241</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <PackagePath>Assets\Square44x44Logo.targetsize-24_altform-unplated.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2017-11-05T07:19:49.241</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\Assets\star.png">
+      <PackagePath>Assets\star.png</PackagePath>
+      <Modified>2017-11-07T07:07:43.071</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\Assets\StoreLogo.png">
+      <PackagePath>Assets\StoreLogo.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2017-11-05T07:19:49.241</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\Assets\Wide310x150Logo.scale-200.png">
+      <PackagePath>Assets\Wide310x150Logo.scale-200.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2017-11-05T07:19:49.241</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\clrcompression.dll">
+      <PackagePath>clrcompression.dll</PackagePath>
+      <Modified>2016-06-13T12:46:18.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\LeNet5 Test.dll">
+      <PackagePath>LeNet5 Test.dll</PackagePath>
+      <Modified>2017-11-09T03:04:23.316</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\LeNet5 Test.exe">
+      <PackagePath>LeNet5 Test.exe</PackagePath>
+      <Modified>2017-11-09T03:04:23.421</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\LeNet5 Test.pdb">
+      <PackagePath>LeNet5 Test.pdb</PackagePath>
+      <Modified>2017-11-09T03:04:23.411</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\bin\x64\Release\ilc\resources.pri">
+      <PackagePath>resources.pri</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2017-11-09T03:04:09.052</Modified>
+    </AppxPackagedFile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResolvedSDKReference Include="C:\Users\woobes\.nuget\packages\microsoft.net.native.sharedlibrary-x86\1.7.0\build\..\tools\SharedLibrary\ret\Native\Microsoft.NET.Native.Framework.1.7.appx">
+      <Name>Microsoft.NET.Native.Framework.1.7</Name>
+      <Version>1.7.25531.0</Version>
+      <Architecture>x86</Architecture>
+      <FrameworkIdentity>Name = Microsoft.NET.Native.Framework.1.7, MinVersion = 1.7.25531.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
+      <AppxLocation>C:\Users\woobes\.nuget\packages\microsoft.net.native.sharedlibrary-x86\1.7.0\build\..\tools\SharedLibrary\ret\Native\Microsoft.NET.Native.Framework.1.7.appx</AppxLocation>
+      <MoreInfo>
+      </MoreInfo>
+    </ResolvedSDKReference>
+    <ResolvedSDKReference Include="C:\Users\woobes\.nuget\packages\microsoft.net.native.sharedlibrary-x64\1.7.0\build\..\tools\SharedLibrary\ret\Native\Microsoft.NET.Native.Framework.1.7.appx">
+      <Name>Microsoft.NET.Native.Framework.1.7</Name>
+      <Version>1.7.25531.0</Version>
+      <Architecture>x64</Architecture>
+      <FrameworkIdentity>Name = Microsoft.NET.Native.Framework.1.7, MinVersion = 1.7.25531.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
+      <AppxLocation>C:\Users\woobes\.nuget\packages\microsoft.net.native.sharedlibrary-x64\1.7.0\build\..\tools\SharedLibrary\ret\Native\Microsoft.NET.Native.Framework.1.7.appx</AppxLocation>
+      <MoreInfo>
+      </MoreInfo>
+    </ResolvedSDKReference>
+    <ResolvedSDKReference Include="C:\Users\woobes\.nuget\packages\microsoft.net.native.sharedlibrary-arm\1.7.0\build\..\tools\SharedLibrary\ret\Native\Microsoft.NET.Native.Framework.1.7.appx">
+      <Name>Microsoft.NET.Native.Framework.1.7</Name>
+      <Version>1.7.25531.0</Version>
+      <Architecture>arm</Architecture>
+      <FrameworkIdentity>Name = Microsoft.NET.Native.Framework.1.7, MinVersion = 1.7.25531.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
+      <AppxLocation>C:\Users\woobes\.nuget\packages\microsoft.net.native.sharedlibrary-arm\1.7.0\build\..\tools\SharedLibrary\ret\Native\Microsoft.NET.Native.Framework.1.7.appx</AppxLocation>
+      <MoreInfo>
+      </MoreInfo>
+    </ResolvedSDKReference>
+    <ResolvedSDKReference Include="C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\build\..\tools\Runtime\x86\Microsoft.NET.Native.Runtime.1.7.appx">
+      <Name>Microsoft.NET.Native.Runtime.1.7</Name>
+      <Version>1.7.25531.0</Version>
+      <Architecture>x86</Architecture>
+      <FrameworkIdentity>Name = Microsoft.NET.Native.Runtime.1.7, MinVersion = 1.7.25531.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
+      <AppxLocation>C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\build\..\tools\Runtime\x86\Microsoft.NET.Native.Runtime.1.7.appx</AppxLocation>
+      <MoreInfo>
+      </MoreInfo>
+    </ResolvedSDKReference>
+    <ResolvedSDKReference Include="C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\build\..\tools\Runtime\x64\Microsoft.NET.Native.Runtime.1.7.appx">
+      <Name>Microsoft.NET.Native.Runtime.1.7</Name>
+      <Version>1.7.25531.0</Version>
+      <Architecture>x64</Architecture>
+      <FrameworkIdentity>Name = Microsoft.NET.Native.Runtime.1.7, MinVersion = 1.7.25531.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
+      <AppxLocation>C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\build\..\tools\Runtime\x64\Microsoft.NET.Native.Runtime.1.7.appx</AppxLocation>
+      <MoreInfo>
+      </MoreInfo>
+    </ResolvedSDKReference>
+    <ResolvedSDKReference Include="C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\build\..\tools\Runtime\arm\Microsoft.NET.Native.Runtime.1.7.appx">
+      <Name>Microsoft.NET.Native.Runtime.1.7</Name>
+      <Version>1.7.25531.0</Version>
+      <Architecture>arm</Architecture>
+      <FrameworkIdentity>Name = Microsoft.NET.Native.Runtime.1.7, MinVersion = 1.7.25531.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
+      <AppxLocation>C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\build\..\tools\Runtime\arm\Microsoft.NET.Native.Runtime.1.7.appx</AppxLocation>
+      <MoreInfo>
+      </MoreInfo>
+    </ResolvedSDKReference>
+    <ResolvedSDKReference Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.VCLibs\14.0\">
+      <Name>Microsoft.VCLibs.140.00</Name>
+      <Version>14.0.25426.0</Version>
+      <Architecture>ARM</Architecture>
+      <FrameworkIdentity>Name = Microsoft.VCLibs.140.00, MinVersion = 14.0.25426.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
+      <AppxLocation>C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.VCLibs\14.0\.\AppX\Retail\ARM\Microsoft.VCLibs.ARM.14.00.appx</AppxLocation>
+      <MoreInfo>
+      </MoreInfo>
+    </ResolvedSDKReference>
+    <ResolvedSDKReference Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.VCLibs\14.0\">
+      <Name>Microsoft.VCLibs.140.00</Name>
+      <Version>14.0.25426.0</Version>
+      <Architecture>x64</Architecture>
+      <FrameworkIdentity>Name = Microsoft.VCLibs.140.00, MinVersion = 14.0.25426.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
+      <AppxLocation>C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.VCLibs\14.0\.\AppX\Retail\x64\Microsoft.VCLibs.x64.14.00.appx</AppxLocation>
+      <MoreInfo>
+      </MoreInfo>
+    </ResolvedSDKReference>
+    <ResolvedSDKReference Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.VCLibs\14.0\">
+      <Name>Microsoft.VCLibs.140.00</Name>
+      <Version>14.0.25426.0</Version>
+      <Architecture>x86</Architecture>
+      <FrameworkIdentity>Name = Microsoft.VCLibs.140.00, MinVersion = 14.0.25426.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
+      <AppxLocation>C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.VCLibs\14.0\.\AppX\Retail\x86\Microsoft.VCLibs.x86.14.00.appx</AppxLocation>
+      <MoreInfo>
+      </MoreInfo>
+    </ResolvedSDKReference>
+  </ItemGroup>
+</Project>

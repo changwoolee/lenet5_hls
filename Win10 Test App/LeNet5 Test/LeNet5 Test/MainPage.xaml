@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="LeNet5_Test.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LeNet5_Test"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="topView" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Button Content="Open Image" HorizontalAlignment="Left" Margin="718,146,0,0" VerticalAlignment="Top" Click="OnOpenImageButtonClicked" FontFamily="Ubuntu" FontSize="18"/>
+        <Grid x:Name="imageView" HorizontalAlignment="Left" Height="318" VerticalAlignment="Top" Width="451" Margin="118,41,0,0">
+            <Image x:Name="img_total" Stretch="Uniform"  PointerMoved="OnImagePointerMoved"/>
+
+        </Grid>
+        <Rectangle x:Name="rect" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="32" Fill="#3F000000" PointerMoved="OnRectPointerMoved"/>
+        <Image x:Name="img_cropped" HorizontalAlignment="Left" Height="100" Margin="718,41,0,0" VerticalAlignment="Top" Width="100" Stretch="Fill" Source="Assets/picture-frame-with-mountain-image_318-40293.jpg"/>
+        <Image x:Name="grayImage" HorizontalAlignment="Left" Height="100" Margin="823,41,0,0" VerticalAlignment="Top" Width="100" Stretch="Uniform" Source="Assets/picture-frame-with-mountain-image_318-40293.jpg"/>
+        <TextBlock x:Name="explanationText" HorizontalAlignment="Left" Margin="719,213,0,0" TextWrapping="Wrap" Text="Result" VerticalAlignment="Top" FontFamily="Ubuntu" Foreground="DodgerBlue" FontSize="18"/>
+        <TextBlock x:Name="resultText" HorizontalAlignment="Left" Margin="718,238,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" FontFamily="Ubuntu" FontSize="18"/>
+        <TextBlock HorizontalAlignment="Left" Margin="718,263,0,0" TextWrapping="Wrap" Text="Percents" VerticalAlignment="Top" Foreground="DodgerBlue" FontFamily="Ubuntu" FontSize="18"/>
+        <TextBlock x:Name="percentText" HorizontalAlignment="Left" Margin="718,289,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" FontFamily="Ubuntu" FontSize="18"/>
+
+
+        <TextBox x:Name="tbIP" HorizontalAlignment="Left" Margin="947,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="132" Header="Server IP" FontFamily="Ubuntu" FontSize="18"/>
+        <TextBox x:Name="tbPort" HorizontalAlignment="Left" Margin="947,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="132" Header="Port" FontFamily="Ubuntu" FontSize="18"/>
+        <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Margin="947,180,0,0" VerticalAlignment="Top" Click="OnConnectButtonClicked" Height="38" Width="132" FontFamily="Ubuntu" FontSize="18"/>
+        <Button Content="Terminate Server" HorizontalAlignment="Left" Margin="946,223,0,0" VerticalAlignment="Top" Height="36" Width="133" FontSize="14" Click="OnTerminateButtonClicked" FontFamily="Ubuntu"/>
+
+
+
+
+
+
+
+
+
+    </Grid>
+</Page>

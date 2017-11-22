@@ -6,7 +6,28 @@ This repository is about my graduate report, implementing LeNet-5 in Vivado High
 ![lenet5](https://world4jason.gitbooks.io/research-log/content/deepLearning/CNN/img/lenet.png "LeNet-5")
 
 
+## Win 10 Test App
+You can test the accelerator by your own handwritten digits image.  
 
+### Youtube Video
+
+[![Youtube Video Here](http://cfile21.uf.tistory.com/image/99C6A7335A1524F20AFF26)](https://youtu.be/C7MUhBBczss)
+
+If you want to test the app, follow these instruction
+
+1. Configure the IP address of Zedboard.  
+```
+	username@Zedboard:~# ifconfig
+```
+2. Start .elf file with port name argument (in here, 5555 is port name)    
+```
+	username@Zedboard:~# lenet5_test.elf 5555
+```
+3. Start the win 10 test application and input the IP address & port name.
+4. Press connect
+5. Open image file
+
+I did not put a zoom in/out function to the app, so please suit the image size. 
 
 ## Model description
 Used model is LeNet5-Like Deep CNN  
@@ -19,7 +40,10 @@ Conv3 : 16x5x5 -> 120x1x1, ksize = 16x120x25, stride = 1
 FC1 : 120x84  
 FC2 : 84x10    
 
-  
+## Environments
+I used Zedboard(Zynq 7z020) for testing.  
+
+HW Functions : CONVOLUTION_ LAYER_ 1, CONVOLUTION_ LAYER_ 2, and CONVOLUTION_ LAYER_ 3, Clk freq set as 100MHz.
 
 
 ## Accuracy  

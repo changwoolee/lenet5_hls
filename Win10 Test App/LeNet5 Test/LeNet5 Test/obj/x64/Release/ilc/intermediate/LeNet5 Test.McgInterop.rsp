@@ -1,0 +1,47 @@
+ /debug:pdbonly
+ /nowarn:0436;0618;1668;1685;1701;1702
+ /debug+
+ /nostdlib+
+ /optimize+
+ /out:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\LeNet5 Test.McgInterop.dll"
+ /pdb:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\LeNet5 Test.McgInterop.pdb"
+ /platform:x64
+ /warnaserror+
+ /unsafe
+ /nologo
+ /target:library
+ /define:MCG_PRE_BUILD
+ /define:WIN64
+ /define:AMD64
+ /define:ALIGN_ACCESS
+ /r:"C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\tools\x64\ilc\lib\Private\System.Private.CoreLib.dll"
+ /r:"C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\tools\x64\ilc\lib\Private\System.Private.CoreLib.InteropServices.dll"
+ /r:"C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\tools\x64\ilc\lib\Private\System.Private.Interop.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Private.Uri.dll"
+ /r:"C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\tools\x64\ilc\lib\Private\System.Private.CompilerServices.ICastable.dll"
+ /r:"C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\tools\x64\ilc\lib\Private\System.Private.Reflection.dll"
+ /r:"C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\tools\x64\ilc\lib\Private\System.Private.DispatchProxy.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Reflection.DispatchProxy.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Reflection.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Runtime.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Runtime.InteropServices.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Runtime.InteropServices.WindowsRuntime.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Numerics.Vectors.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Threading.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Diagnostics.Debug.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Runtime.WindowsRuntime.UI.Xaml.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\TransformedSRWR\System.Runtime.WindowsRuntime.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Dynamic.Runtime.dll"
+ /r:"C:\Users\woobes\.nuget\packages\microsoft.net.native.compiler\1.7.1\tools\x64\ilc\lib\Private\System.Private.CoreLib.Augments.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Runtime.Extensions.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.Collections.dll"
+ /r:"C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\in\System.ObjectModel.dll"
+ /r:"C:\Users\woobes\.nuget\packages\microsoft.net.native.sharedlibrary-x64\1.7.0\tools\SharedLibrary\ret\AnalysisILToc\System.Private.SharedLibrary.Interop.Generated.iltoc"
+ "C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\LeNet5 Test.McgInterop\Adapters.g.cs"
+ "C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\LeNet5 Test.McgInterop\AssemblyInfo.g.cs"
+ "C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\LeNet5 Test.McgInterop\Data.g.cs"
+ "C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\LeNet5 Test.McgInterop\Helpers.g.cs"
+ "C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\LeNet5 Test.McgInterop\ImplTypes.g.cs"
+ "C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\LeNet5 Test.McgInterop\PInvoke.g.cs"
+ "C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\LeNet5 Test.McgInterop\SafeTypes.g.cs"
+ "C:\Users\woobes\Documents\Visual Studio 2017\Projects\LeNet5 Test\LeNet5 Test\obj\x64\Release\ilc\intermediate\LeNet5 Test.McgInterop\SharedStubs.g.cs"

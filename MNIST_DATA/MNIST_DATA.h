@@ -110,4 +110,22 @@ void READ_MNIST_LABEL(string filename, T* label, int image_num=10000, int one_ho
 	}
 //	file.close();
 }
+
+void preprocessTestImage(float* input_layer, unsigned char* test_img, float scale_min, float scale_max){
+	//for (int r = 0; r<n_rows; ++r)
+	for (int r = 0; r<32; ++r)
+	{
+		//for (int c = 0; c<n_cols; ++c)
+		for(int c=0;c<32;++c)
+		{
+			float _temp;
+
+			unsigned char temp = test_img[r*32+c+1];
+
+			_temp = ((float)temp / 255.0 )*(scale_max - scale_min) + scale_min;
+
+			input_layer[r*32 + c] = _temp;
+		}
+	}
+}
 #endif

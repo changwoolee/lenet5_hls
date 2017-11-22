@@ -14,7 +14,10 @@
 
 
 #include "lenet5/lenet5.h"
-
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 
 #include "sdx_test.h"
 #include "./MNIST_DATA/MNIST_DATA.h"
@@ -34,10 +37,42 @@ void load_model(string filename, float* weight, int size) {
 		cout<<"Loading model is failed : "<<filename<<endl;
 	}
 }
+
+
+
 using namespace std;
-int main(void){
+int main(int argc, char *argv[]){
+	int server_socket;
+	int port;
+	struct sockaddr_in serveraddr, clientaddr;
+	// UDP prepare
+	if(argc>1){
+
+		port = atoi(argv[1]);
+		if((server_socket = socket(PF_INET,SOCK_DGRAM,0))<0){
+				perror("Cannot create socket\n");
+				exit(1);
+		}
+
+
+		bzero((char *)&serveraddr, sizeof(serveraddr));
+		bzero((char *)&clientaddr,sizeof(clientaddr));
+		serveraddr.sin_family=AF_INET;
+		serveraddr.sin_port=htons(port);
+
+		serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+		if(bind(server_socket, (struct sockaddr*)&serveraddr, sizeof(serveraddr))<0){
+			perror("Cannot Bind the UDP Server\n");
+			exit(1);
+		}
+
+	}
+
+
 	// Calc execution time
-	clock_t start_point, end_point;
+	clock_t start_point, end_point, c1_start,c1_stop, c2_start,c2_stop,c3_start,c3_stop;
+	vector<clock_t> v_c1,v_c2,v_c3;
 	start_point = clock();
 
 	cout<<"------------------------------------------------------------------\n"
@@ -54,16 +89,22 @@ int main(void){
 		<<"batch : "<<image_Batch<<" test img num : "<<image_Move<<"\n"
 		<<"------------------------------------------------------------------"<<endl;
 
+	float* MNIST_IMG;
+	int* MNIST_LABEL;
 
-	float* MNIST_IMG = (float*) malloc(image_Move*MNIST_PAD_SIZE*sizeof(float)); // MNIST TEST IMG
-	int* MNIST_LABEL = (int*) malloc(image_Move*sizeof(int)); // MNIST TEST LABEL
-	if(!MNIST_IMG || !MNIST_LABEL){
-		cout<< "Memory allocation error(0)"<<endl;
-		exit(1);
+	if(argc==1){
+		MNIST_IMG = (float*) malloc(image_Move*MNIST_PAD_SIZE*sizeof(float)); // MNIST TEST IMG
+		MNIST_LABEL = (int*) malloc(image_Move*sizeof(int)); // MNIST TEST LABEL
+		if(!MNIST_IMG || !MNIST_LABEL){
+			cout<< "Memory allocation error(0)"<<endl;
+			exit(1);
+		}
+
+		// read MNIST data & label
+		READ_MNIST_DATA("/mnt/LeNet5/MNIST_DATA/t10k-images.idx3-ubyte",MNIST_IMG,-1.0f, 1.0f, image_Move);
+		READ_MNIST_LABEL("/mnt/LeNet5/MNIST_DATA/t10k-labels.idx1-ubyte",MNIST_LABEL,image_Move,false);
+
 	}
-	// read MNIST data & label
-	READ_MNIST_DATA("/mnt/LeNet5/MNIST_DATA/t10k-images.idx3-ubyte",MNIST_IMG,-1.0f, 1.0f, image_Move);
-	READ_MNIST_LABEL("/mnt/LeNet5/MNIST_DATA/t10k-labels.idx1-ubyte",MNIST_LABEL,image_Move,false);
 
 	float* Wconv1= (float*) sds_alloc(CONV_1_TYPE*CONV_1_SIZE*sizeof(float));
 	float* bconv1=(float*)sds_alloc(CONV_1_TYPE*sizeof(float));
@@ -136,47 +177,111 @@ int main(void){
 	stringstream ss;
 #endif
 #ifdef HW_TEST
-	vector<double> result_hw;
-	double accuracy_hw;
-	 //HW test start
-	int init=1;
-	cout<<"HW test start"<<endl;
-	for(int i=0;i<test_num;i++,init&=0){
-		for(int batch=0;batch<image_Batch*INPUT_WH*INPUT_WH;batch++)
-			input_layer[batch] = MNIST_IMG[i*MNIST_PAD_SIZE + batch];
+
+	if(argc>1){
+
+			unsigned char buffer[4096];
+			int addr_length;
+			int init=1;
+			while(1){
+				addr_length = sizeof(clientaddr);
+				int length = recvfrom(server_socket,buffer,sizeof(buffer),0,(sockaddr*)&clientaddr,(socklen_t*)&addr_length);
+				cout<<"Received | length = "<<length<<" msg[0] = "<<buffer[0]<<" msg[1025] = "<<buffer[1025]<<endl;
+				if(buffer[0]=='b'&&buffer[1]=='y'&&buffer[2]=='e'){
+					break;
+				}
+				if(length==1026 && buffer[0]=='s' && buffer[1025]=='e'){
+					cout<<"image received"<<endl;
+					preprocessTestImage(input_layer,buffer,-1.0f,1.0f);
+					cout<<"image ready"<<endl;
+					CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1, init);
+
+					// S1 layer
+					POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
+
+					// C2 layer
+
+					CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2,init);
+					// S2 layer
+					POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
+
+					// C3 layer
+
+					CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3,init);
+
+					// FC1 layer
+					FULLY_CONNECTED_LAYER_1_SW(hconv3,Wfc1,bfc1,hfc1);
+
+					// FC2 layer
+					FULLY_CONNECTED_LAYER_2_SW(hfc1,Wfc2,bfc2,output);
+
+					int result = argmax(output,10);
+					char send_buffer[1024];
+					int ret = snprintf(send_buffer,sizeof(send_buffer),"t,%d,%2.6f,%2.6f,%2.6f,%2.6f,%2.6f,%2.6f,%2.6f,%2.6f,%2.6f,%2.6f\n",result,
+							output[0],output[1],output[2],output[3],output[4],output[5],output[6],output[7],output[8],output[9]);
+					cout<<"Number : "<<result<<endl;
 
 
-		// C1 layer
-		CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1, init);
+					int len = sendto(server_socket,send_buffer,ret,0,(sockaddr*)&clientaddr, sizeof(clientaddr));
 
-		// S1 layer
-		POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
 
-		// C2 layer
-		CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2,init);
-		
-		// S2 layer
-		POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
+				}
+				init=0;
+				usleep(100);
+			}
 
-		// C3 layer
-		CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3,init);
+	}
+	else{
 
-		// FC1 layer
-		FULLY_CONNECTED_LAYER_1_SW(hconv3,Wfc1,bfc1,hfc1);
+		vector<double> result_hw;
+		double accuracy_hw;
+		//HW test start
+		int init=1;
+		cout<<"HW test start"<<endl;
+		for(int i=0;i<test_num;i++,init&=0){
+			for(int batch=0;batch<image_Batch*INPUT_WH*INPUT_WH;batch++)
+				input_layer[batch] = MNIST_IMG[i*MNIST_PAD_SIZE + batch];
 
-		// FC2 layer
-		FULLY_CONNECTED_LAYER_2_SW(hfc1,Wfc2,bfc2,output);
+
+			// C1 layer
+			c1_start=clock();
+			CONVOLUTION_LAYER_1(input_layer,Wconv1,bconv1,hconv1, init);
+			c1_stop = clock();
+			v_c1.push_back(c1_stop-c1_start);
+			// S1 layer
+			POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
+
+			// C2 layer
+			c2_start=clock();
+			CONVOLUTION_LAYER_2(pool1,Wconv2,bconv2,hconv2,init);
+			c2_stop = clock();
+			v_c2.push_back(c2_stop-c2_start);
+			// S2 layer
+			POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
+
+			// C3 layer
+			c3_start=clock();
+			CONVOLUTION_LAYER_3(pool2,Wconv3,bconv3,hconv3,init);
+			c3_stop=clock();
+			v_c3.push_back(c3_stop-c3_start);
+			// FC1 layer
+			FULLY_CONNECTED_LAYER_1_SW(hconv3,Wfc1,bfc1,hfc1);
+
+			// FC2 layer
+			FULLY_CONNECTED_LAYER_2_SW(hfc1,Wfc2,bfc2,output);
 
 #ifdef LOG
-		get_log(&ss,input_layer,hconv1,pool1,hconv2,pool2,hconv3,hfc1,output);
+			get_log(&ss,input_layer,hconv1,pool1,hconv2,pool2,hconv3,hfc1,output);
 #endif
 
-		result_hw.push_back(equal(MNIST_LABEL[i],argmax(output)));
+			result_hw.push_back(equal(MNIST_LABEL[i],argmax(output)));
+		}
+
+		// accuracy estimation
+		accuracy_hw = 1.0*accumulate(result_hw.begin(),result_hw.end(),0.0);
+		cout<<"HW test completed"<<endl;
+		cout<<"accuracy : "<<accuracy_hw<<"/"<<result_hw.size()<<endl;
 	}
-	// accuracy estimation
-	accuracy_hw = 1.0*accumulate(result_hw.begin(),result_hw.end(),0.0);
-	cout<<"HW test completed"<<endl;
-	cout<<"accuracy : "<<accuracy_hw<<"/"<<result_hw.size()<<endl;
 #endif
 
 
@@ -191,17 +296,20 @@ int main(void){
 		for(int batch=0;batch<image_Batch*INPUT_WH*INPUT_WH;batch++){
 			input_layer[batch] = MNIST_IMG[i*MNIST_PAD_SIZE + batch];
 		}
-
+		c1_start=clock();
 		CONVOLUTION_LAYER_1_SW(input_layer,Wconv1,bconv1,hconv1);
-
+		c1_stop=clock();
 		POOLING_LAYER_1_SW(hconv1,Wpool1,bpool1,pool1);
-
+		c2_start=clock();
 		CONVOLUTION_LAYER_2_SW(pool1,Wconv2,bconv2,hconv2);
-
+		c2_stop=clock();
 		POOLING_LAYER_2_SW(hconv2,Wpool2,bpool2,pool2);
-
+		c3_start=clock();
 		CONVOLUTION_LAYER_3_SW(pool2,Wconv3,bconv3,hconv3);
-
+		c3_stop=clock();
+		v_c1.push_back(c1_stop-c1_start);
+		v_c2.push_back(c2_stop-c2_start);
+		v_c3.push_back(c3_stop-c3_start);
 		FULLY_CONNECTED_LAYER_1_SW(hconv3,Wfc1,bfc1,hfc1);
 
 
@@ -310,13 +418,19 @@ int main(void){
 	cout<<"Test Completed"<<endl;
 
 	end_point = clock();
-
+	double c1_exetime,c2_exetime,c3_exetime;
+	c1_exetime = (double)accumulate(v_c1.begin(),v_c1.end(),0.0)/(CLOCKS_PER_SEC);
+	c2_exetime = (double)accumulate(v_c2.begin(),v_c2.end(),0.0)/(CLOCKS_PER_SEC);
+	c3_exetime = (double)accumulate(v_c3.begin(),v_c3.end(),0.0)/(CLOCKS_PER_SEC);
 #ifdef HW_TEST
 	cout<<"HW execution time : "
 #else
 	cout<<"SW execution time : "
 #endif
-	<<(double)(end_point-start_point)/CLOCKS_PER_SEC<< " seconds"<<endl;
+	<<(double)(end_point-start_point)/CLOCKS_PER_SEC<< " seconds\n"
+	<<"C1 : "<<c1_exetime<<" seconds\n"
+	<<"C2 : "<<c2_exetime<<" seconds\n"
+	<<"C3 : "<<c3_exetime<<" seconds\n";
 #ifdef LOG
 #ifdef HW_TEST
 		print_log("/mnt/model_log/conv_steps_hw.log",&ss);

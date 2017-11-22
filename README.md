@@ -47,14 +47,16 @@ HW Functions : CONVOLUTION_ LAYER_ 1, CONVOLUTION_ LAYER_ 2, and CONVOLUTION_ LA
 
 
 ## Accuracy  
-	SW accuracy : 98.63%    
-	HW accuracy : 98.63%  
+	SW accuracy : 98.63% (single precision fp)    
+	HW accuracy : 98.63% (single precision fp)  
 
-## Runtime
+## Runtime  
+	# of images : 10,000, batch size : 1  
+	
 	SW runtime  : 59.4456 seconds  
-	HW runtime  : 16.4012 seconds  
+	HW runtime  : 16.3954 seconds  
 
-	x3.62 faster 
+	speedup : x3.63 faster 
 
 
 

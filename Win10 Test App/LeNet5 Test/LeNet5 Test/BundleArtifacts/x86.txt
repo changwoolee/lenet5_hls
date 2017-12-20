@@ -1,0 +1,2 @@
+MainPackage=C:\Users\woobes\workspace\lenet5_test\src\Win10 Test App\LeNet5 Test\LeNet5 Test\bin\x86\Release\LeNet5 Test_1.0.0.0_x86.appx
+SymbolPackage=C:\Users\woobes\workspace\lenet5_test\src\Win10 Test App\LeNet5 Test\LeNet5 Test\AppPackages\LeNet5 Test_1.0.0.0_Test\LeNet5 Test_1.0.0.0_x86.appxsym

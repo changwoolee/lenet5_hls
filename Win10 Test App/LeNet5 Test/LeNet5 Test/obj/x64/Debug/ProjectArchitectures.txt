@@ -1,1 +1,0 @@
-C:\Users\woobes\documents\visual studio 2017\Projects\LeNet5 Test\LeNet5 Test\LeNet5 Test.csproj;x64

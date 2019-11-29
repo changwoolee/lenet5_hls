@@ -58,5 +58,8 @@ HW Functions : CONVOLUTION_ LAYER_ 1, CONVOLUTION_ LAYER_ 2, and CONVOLUTION_ LA
 
 	speedup : x3.63 faster 
 
+## Contributors
+* Changwoo Lee (Hanyang University, Seoul, South Korea)
+* Jeonghyun Woo (Hanyang University, Seoul, South Korea)
 
 

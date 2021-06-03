@@ -1,6 +1,6 @@
 LeNet-5 in HLS
 ===========
-This repository is about my graduate report, implementing LeNet-5 in Vivado High Level Synthesis 2016.4 & Vivado   SDSoC 2016.4
+This repository is about our undergraduate graduation project, implementing LeNet-5 by using Vivado High Level Synthesis 2016.4 & Vivado   SDSoC 2016.4
 
 
 ![lenet5](https://world4jason.gitbooks.io/research-log/content/deepLearning/CNN/img/lenet.png "LeNet-5")

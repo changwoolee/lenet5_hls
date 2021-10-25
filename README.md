@@ -41,7 +41,7 @@ FC1 : 120x84
 FC2 : 84x10    
 
 ## Environments
-I used Zedboard(Zynq 7z020) for testing.  
+We used Zedboard(Zynq 7z020) for testing.  
 
 HW Functions : CONVOLUTION_ LAYER_ 1, CONVOLUTION_ LAYER_ 2, and CONVOLUTION_ LAYER_ 3, Clk freq set as 100MHz.
 
@@ -56,7 +56,7 @@ HW Functions : CONVOLUTION_ LAYER_ 1, CONVOLUTION_ LAYER_ 2, and CONVOLUTION_ LA
 	SW runtime  : 59.4456 seconds  
 	HW runtime  : 16.3954 seconds  
 
-	speedup : x3.63 faster 
+	speedup : 3.63x faster 
 
 ## Contributors
 * Changwoo Lee (Hanyang University, Seoul, South Korea)
